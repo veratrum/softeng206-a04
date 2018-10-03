@@ -1,7 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.PracticeScreenController">
-
+   <children>
+      <Label layoutX="322.0" layoutY="27.0" text="Practice">
+         <font>
+            <Font size="39.0" />
+         </font>
+      </Label>
+      <ListView layoutX="39.0" layoutY="124.0" prefHeight="328.0" prefWidth="200.0" />
+      <ListView layoutX="287.0" layoutY="124.0" prefHeight="328.0" prefWidth="200.0" />
+      <ListView layoutX="538.0" layoutY="124.0" prefHeight="328.0" prefWidth="200.0" />
+      <Label layoutX="39.0" layoutY="101.0" text="First Name:" />
+      <Label layoutX="287.0" layoutY="101.0" text="Last Name:" />
+      <Label layoutX="538.0" layoutY="101.0" text="Playlist:" />
+      <Button layoutX="179.0" layoutY="496.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="188.0" text="Add To Playlist" />
+      <Button layoutX="179.0" layoutY="539.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="188.0" text="Remove From Playlist" />
+      <Button layoutX="661.0" layoutY="564.0" mnemonicParsing="false" text="Return To Home" />
+   </children>
 </Pane>

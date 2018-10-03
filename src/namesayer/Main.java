@@ -46,19 +46,19 @@ public class Main extends Application implements MainListener {
 	
 	private void loadScenes() throws IOException {
 		mainScene = loadScene("MainScreen.fxml", 800, 600);
-		mainScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+		//mainScene.getStylesheets().add(getClass().getClassLoader().getResource("application.css").toExternalForm());
 		
 		recordScene = loadScene("RecordScreen.fxml", 800, 600);
-		recordScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+		//recordScene.getStylesheets().add(getClass().getClassLoader().getResource("application.css").toExternalForm());
 
 		practiceScene = loadScene("PracticeScreen.fxml", 800, 600);
-		practiceScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+		//practiceScene.getStylesheets().add(getClass().getClassLoader().getResource("application.css").toExternalForm());
 
 		helpScene = loadScene("MainScreen.fxml", 800, 600);
-		helpScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+		//helpScene.getStylesheets().add(getClass().getClassLoader().getResource("application.css").toExternalForm());
 
 		importScene = loadScene("MainScreen.fxml", 800, 600);
-		importScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+		//importScene.getStylesheets().add(getClass().getClassLoader().getResource("application.css").toExternalForm());
 	}
 	
 	private Scene loadScene(String fxmlPath, int width, int height) throws IOException {
