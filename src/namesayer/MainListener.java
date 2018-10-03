@@ -13,4 +13,6 @@ public interface MainListener {
 	public void goHelp();
 	
 	public void goImport();
+	
+	public void goMain();
 }
