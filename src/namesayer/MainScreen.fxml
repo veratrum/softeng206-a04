@@ -15,7 +15,7 @@
       </Label>
       <Button layoutX="44.0" layoutY="519.0" mnemonicParsing="false" text="Help" />
       <Button layoutX="130.0" layoutY="520.0" mnemonicParsing="false" text="Progress" />
-      <Button layoutX="445.0" layoutY="252.0" mnemonicParsing="false" prefHeight="73.0" prefWidth="144.0" text="Record" />
-      <Button layoutX="180.0" layoutY="249.0" mnemonicParsing="false" prefHeight="80.0" prefWidth="144.0" text="Practice" />
+      <Button onAction="#GoToRecordScreen" layoutX="445.0" layoutY="252.0" mnemonicParsing="false" prefHeight="73.0" prefWidth="144.0" text="Record" />
+      <Button onAction="#GoToPracticeScreen" layoutX="180.0" layoutY="249.0" mnemonicParsing="false" prefHeight="80.0" prefWidth="144.0" text="Practice" />
    </children>
 </Pane>

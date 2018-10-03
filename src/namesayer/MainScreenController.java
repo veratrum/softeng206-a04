@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import javafx.event.ActionEvent;
 
-public class MainScreenController {
+public class MainScreenController extends CustomController {
 	
 	// A field used to change the screen in the applicaton window.
 	private ScreenChanger screenChanger = new ScreenChanger();
@@ -16,7 +16,13 @@ public class MainScreenController {
 	 * @throws IOException 
 	 */
 	public void GoToPracticeScreen(ActionEvent event) throws IOException {
-		screenChanger.ChangeScreen("PracticeScreen.fxml", event);
+		//screenChanger.ChangeScreen("PracticeScreen.fxml", event);
+		
+		mainListener.goPractice();
+	}
+	
+	public void GoToRecordScreen(ActionEvent event) {
+		mainListener.goRecord();
 	}
 	
 }
