@@ -1,11 +1,14 @@
 package namesayer;
 	
+import java.io.File;
 import java.io.IOException;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.fxml.FXMLLoader;
 
 
@@ -65,10 +68,13 @@ public class Main extends Application implements MainListener {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
 		Pane root = loader.load();
 		CustomController controller = loader.getController();
+		Scene scene = new Scene(root, width, height);
+		
+		controller.setScene(scene);
+		controller.setRootPane(root);
 		controller.setMainListener(this);
 		controller.setCreations(creations);
 		controller.init();
-		Scene scene = new Scene(root, width, height);
 		
 		return scene;
 	}

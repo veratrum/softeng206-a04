@@ -1,5 +1,7 @@
 package namesayer;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -11,10 +13,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.Pane;
+import namesayer.mediaplayer.BasicMediaPlayerController;
 import javafx.scene.control.Alert.AlertType;
 
 public class RecordScreenController extends CustomController {
@@ -27,12 +32,15 @@ public class RecordScreenController extends CustomController {
 	private Creation selectedCreation;
 	private Recording selectedRecording;
 	
+	BasicMediaPlayerController mediaPlayerController;
+	
 	@Override
 	public void init() {
 		updateCreationList();
 		updateRecordingList();
 		
 		setupListeners();
+		setupMediaPlayer();
 	}
 	
 	private void updateCreationList() {
@@ -65,6 +73,8 @@ public class RecordScreenController extends CustomController {
 				selectedCreation = newValue;
 				
 				updateRecordingList();
+				
+				mediaPlayerController.setRecording(null);
 			}
 			
 		});
@@ -74,9 +84,27 @@ public class RecordScreenController extends CustomController {
 			@Override
 			public void changed(ObservableValue<? extends Recording> observable, Recording oldValue, Recording newValue) {
 				selectedRecording = newValue;
+				
+				mediaPlayerController.setRecording(selectedRecording);
 			}
 			
 		});
+	}
+	
+	private void setupMediaPlayer() {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("mediaplayer"
+					+ File.separator + "MediaPlayerPaneBasic.fxml"));
+			Pane mediaPlayerPane = loader.load();
+			
+			mediaPlayerController = loader.getController();
+
+			mediaPlayerPane.setLayoutX(250);
+			mediaPlayerPane.setLayoutY(375);
+			rootPane.getChildren().add(mediaPlayerPane);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void newName() {
