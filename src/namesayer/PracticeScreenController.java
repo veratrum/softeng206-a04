@@ -2,7 +2,10 @@ package namesayer;
 
 import java.io.File;
 import java.io.SequenceInputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -13,6 +16,9 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
@@ -208,18 +214,62 @@ public class PracticeScreenController extends CustomController {
 	 * This method is called when the user presses the play playlist button in the practice screen of the GUI
 	 */
 	public void playPlaylist(){
-
-		Task<Void> task = new Task<Void>() {
-			@Override
-			protected Void call() throws Exception {
-				ObservableList<String> playList = playlist.getItems();
-				for(String names : playList) {
-					playName(names);
+		
+		if (playlist.getItems().size() > 1) {
+			// ask the user if they want to randomise the order when there is more than one name in the playlist
+			Alert confirmation = new Alert(AlertType.CONFIRMATION);
+			confirmation.setTitle("Play Recordings");
+			confirmation.setHeaderText("Play Multiple Recordings");
+			confirmation.setContentText("You have selected to play multuple recordings\ndo you wish to shuffle the order the selected\nrecordings are played in?");
+			ButtonType buttonYes = new ButtonType("Yes");
+			ButtonType buttonNo = new ButtonType("No");
+			confirmation.getButtonTypes().setAll(buttonYes, buttonNo);
+			Optional<ButtonType> result = confirmation.showAndWait();
+			
+			Task<Void> task = new Task<Void>() {
+				@Override
+				protected Void call() throws Exception {
+					
+					// Getting the playlist 
+					ObservableList<String> playList = playlist.getItems();
+					ArrayList<String> namesToPlay = new ArrayList<String>();
+					
+					// Changing the type from an Observable list s
+					for ( String name : playList) {
+						namesToPlay.add(name);
+					}
+					
+					if (result.get() == buttonYes){
+						Collections.shuffle(namesToPlay);
+					}
+					
+					for(String names : namesToPlay) {
+						playName(names);
+					}
+					return null;
 				}
-				return null;
-			}
-		};
-		new Thread(task).start();
+			};
+			new Thread(task).start();
+			
+		}
+		// Otherwise don't prompt the user to shuffle as there is no need
+		else {
+			Task<Void> task = new Task<Void>() {
+				@Override
+				protected Void call() throws Exception {
+					
+					// Getting the playlist 
+					ObservableList<String> playList = playlist.getItems();
+					
+					for(String names : playList) {
+						playName(names);
+					}
+					return null;
+				}
+			};
+			new Thread(task).start();
+		}
+		
 	}
 
 	/**
