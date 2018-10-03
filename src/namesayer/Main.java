@@ -92,4 +92,9 @@ public class Main extends Application implements MainListener {
 	public void goImport() {
 		stage.setScene(importScene);
 	}
+	
+	@Override
+	public void goMain() {
+		stage.setScene(mainScene);
+	}
 }
