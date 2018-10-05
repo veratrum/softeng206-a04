@@ -2,6 +2,7 @@ package namesayer;
 
 import java.io.IOException;
 
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 
 public class MainScreenController extends CustomController {
@@ -17,6 +18,12 @@ public class MainScreenController extends CustomController {
 	
 	public void GoToRecordScreen(ActionEvent event) {
 		mainListener.goRecord();
+	}
+	
+	public void GoToProgressScreen(ActionEvent event) {
+		mainListener.goProgress();
+		
+			
 	}
 	
 }

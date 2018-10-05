@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.SequenceInputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import javax.sound.sampled.AudioFileFormat;
@@ -11,6 +12,7 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -19,6 +21,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
@@ -39,19 +42,24 @@ public class PracticeScreenController extends CustomController {
 	private ToggleGroup firstNameGroup = new ToggleGroup();
 	private ToggleGroup lastNameGroup = new ToggleGroup();
 
+	// Setting up the radioButtons on the listViews
 	public static final ObservableList<RadioButton> firstNameRadioButtons = FXCollections.observableArrayList();
 	public static final ObservableList<RadioButton> lastNameRadioButtons = FXCollections.observableArrayList();
 
-
+	// fields used for user feedback to track their progress
+	private Optional<String> userRating;
+	protected List<String> allUserRatings = new ArrayList<String>(); // Note: this is package visibility as we need to access this in the ProgressScreenController class!
+	
+	
+	
 	@Override
 	public void init() {
 		updateFirstNameList();
-
 		updateLastNameList();
-
-		//setupListeners();
 	}
 
+	
+	
 	// code modified from: https://stackoverflow.com/questions/47757368/javafx-radio-buttons-inside-listview-selectionmodel?rq=1
 	private void updateFirstNameList() {
 		ObservableList<Creation> firstNameDataList = FXCollections.observableArrayList(creations.getCreations());
@@ -191,8 +199,8 @@ public class PracticeScreenController extends CustomController {
 	public void removeNameFromPlayList() {
 		playlist.getItems().remove(playlist.getSelectionModel().getSelectedItem());
 	}
-	
-	
+
+
 	/**
 	 * This method is called when the user has selected to play a single name from the playlist that they have created.
 	 */
@@ -208,13 +216,13 @@ public class PracticeScreenController extends CustomController {
 		new Thread(task).start();
 	}
 
-	
-	
+
+
 	/**
 	 * This method is called when the user presses the play playlist button in the practice screen of the GUI
 	 */
 	public void playPlaylist(){
-		
+
 		if (playlist.getItems().size() > 1) {
 			// ask the user if they want to randomise the order when there is more than one name in the playlist
 			Alert confirmation = new Alert(AlertType.CONFIRMATION);
@@ -225,51 +233,90 @@ public class PracticeScreenController extends CustomController {
 			ButtonType buttonNo = new ButtonType("No");
 			confirmation.getButtonTypes().setAll(buttonYes, buttonNo);
 			Optional<ButtonType> result = confirmation.showAndWait();
-			
+
 			Task<Void> task = new Task<Void>() {
 				@Override
 				protected Void call() throws Exception {
-					
+
 					// Getting the playlist 
 					ObservableList<String> playList = playlist.getItems();
 					ArrayList<String> namesToPlay = new ArrayList<String>();
-					
+
 					// Changing the type from an Observable list s
 					for ( String name : playList) {
 						namesToPlay.add(name);
 					}
-					
+
 					if (result.get() == buttonYes){
 						Collections.shuffle(namesToPlay);
 					}
-					
+
 					for(String names : namesToPlay) {
 						playName(names);
 					}
+
+					new Thread(new Runnable() {
+						@Override public void run() {
+							Platform.runLater(new Runnable() {
+								@Override public void run() {
+									// Now we need to ask the user how they think they did in their last attempt so we can track their progress.
+									List<String> choices = new ArrayList<>();
+									choices.add("1");choices.add("2");choices.add("3");choices.add("4");choices.add("5");choices.add("6");choices.add("7");choices.add("8");choices.add("9");choices.add("10");
+
+
+									ChoiceDialog<String> dialog = new ChoiceDialog<>("1", choices);
+									dialog.setTitle("Rate your progress");
+									dialog.setHeaderText("How do you think you performed for your playlist?");
+									dialog.setContentText("Rating:");
+
+									// Getting the users self rating.
+									userRating = dialog.showAndWait();
+									
+									// Adding the user rating to the array which stores all past user ratings - if it is present
+									if(userRating.isPresent()) {
+										allUserRatings.add(userRating.get());
+									}
+									
+								}
+							});
+
+						}
+					}).start();
+					
 					return null;
 				}
 			};
-			new Thread(task).start();
-			
+			Thread thread = new Thread(task);
+			thread.start();
+
+
+
+
 		}
 		// Otherwise don't prompt the user to shuffle as there is no need
 		else {
 			Task<Void> task = new Task<Void>() {
 				@Override
 				protected Void call() throws Exception {
-					
+
 					// Getting the playlist 
 					ObservableList<String> playList = playlist.getItems();
-					
+
 					for(String names : playList) {
 						playName(names);
 					}
+
+
 					return null;
 				}
 			};
 			new Thread(task).start();
+
 		}
-		
+
+
+
+
 	}
 
 	/**
@@ -278,11 +325,11 @@ public class PracticeScreenController extends CustomController {
 	public void GoToMainScreen(ActionEvent event) {
 		mainListener.goMain();
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
 	/**
 	 * A function which plays a name from the playlist
 	 */
@@ -320,11 +367,11 @@ public class PracticeScreenController extends CustomController {
 		}
 	}
 
-	
-	
-	
-	
-	
+
+
+
+
+
 	/**
 	 * This function is used to play a name within the playlist of the GUI that has two componenets and therefore needs to be merged before it is played.
 	 * 
@@ -360,10 +407,10 @@ public class PracticeScreenController extends CustomController {
 		}
 	}
 
-	
-	
-	
-	
+
+
+
+
 	/**
 	 *  This helper function creates a PlayList directory to store the temporary data associated with the current playlist
 	 */
@@ -375,9 +422,9 @@ public class PracticeScreenController extends CustomController {
 		}
 	}
 
-	
-	
-	
+
+
+
 	/**
 	 * Helper function that given a recording of a creation which plays it.
 	 * @param recording
@@ -399,9 +446,9 @@ public class PracticeScreenController extends CustomController {
 
 	}
 
-	
-	
-	
+
+
+
 	/**
 	 * This method is called when the user presses the associated button to clear the radioButton selections.
 	 */
