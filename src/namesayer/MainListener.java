@@ -15,4 +15,6 @@ public interface MainListener {
 	public void goImport();
 	
 	public void goMain();
+
+	public void goProgress();
 }

@@ -18,6 +18,7 @@ public class Main extends Application implements MainListener {
 	private Scene practiceScene;
 	private Scene helpScene;
 	private Scene importScene;
+	private Scene progressScene;
 	
 	private Creations creations;
 	
@@ -59,6 +60,9 @@ public class Main extends Application implements MainListener {
 
 		importScene = loadScene("MainScreen.fxml", 800, 600);
 		//importScene.getStylesheets().add(getClass().getClassLoader().getResource("application.css").toExternalForm());
+		
+		progressScene = loadScene("ProgressScreen.fxml", 800, 600);
+		//progressScene.getStylesheets().add(getClass().getClassLoader().getResource("application.css").toExternalForm());
 	}
 	
 	private Scene loadScene(String fxmlPath, int width, int height) throws IOException {
@@ -96,5 +100,10 @@ public class Main extends Application implements MainListener {
 	@Override
 	public void goMain() {
 		stage.setScene(mainScene);
+	}
+	
+	@Override
+	public void goProgress() {
+		stage.setScene(progressScene);
 	}
 }
