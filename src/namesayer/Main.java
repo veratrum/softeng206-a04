@@ -22,6 +22,7 @@ public class Main extends Application implements MainListener {
 	
 	private Creations creations;
 	
+	
 	@Override
 	public void start(Stage primaryStage) {
 		try {
