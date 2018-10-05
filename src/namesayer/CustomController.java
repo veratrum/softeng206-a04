@@ -4,8 +4,9 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 
 /**
- * Basic scene.
- * Has access to Main (for changing scenes), and Creations
+ * Basic controller.
+ * Has access to Main (for changing scenes), Creations,
+ * and some of its own JavaFX-related classes
  *
  */
 public class CustomController {

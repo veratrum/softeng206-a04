@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.media.RecordingModuleController">
+   <children>
+      <Separator layoutY="200.0" prefWidth="400.0" />
+      <Button layoutX="147.0" layoutY="220.0" mnemonicParsing="false" onAction="#testMicrophone" text="Test Microphone" />
+      <ProgressBar fx:id="microphoneLevel" layoutX="100.0" layoutY="262.0" prefWidth="200.0" progress="0.0" />
+      <Button fx:id="recordButton" layoutX="175.0" layoutY="100.0" mnemonicParsing="false" onAction="#recordClicked" prefHeight="50.0" prefWidth="50.0" />
+      <Label fx:id="recordingText" alignment="CENTER" layoutY="35.0" prefWidth="400.0" text="Press the button below to start recording audio for ." />
+      <Label layoutX="104.0" layoutY="52.0" text="Press it again when you are finished." />
+   </children>
+</Pane>

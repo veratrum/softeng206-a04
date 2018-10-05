@@ -16,5 +16,6 @@
       <Button layoutX="393.0" layoutY="64.0" mnemonicParsing="false" onAction="#newRecording" text="New" />
       <Button layoutX="456.0" layoutY="64.0" mnemonicParsing="false" onAction="#deleteRecording" text="Delete" />
       <Button layoutX="528.0" layoutY="64.0" mnemonicParsing="false" onAction="#rateRecording" text="Rate" />
+      <Button layoutX="737.0" layoutY="20.0" mnemonicParsing="false" onAction="#goMain" text="Back" />
    </children>
 </Pane>
