@@ -1,5 +1,7 @@
 package namesayer;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -11,13 +13,20 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
+import namesayer.media.BasicMediaPlayerController;
+import namesayer.media.RecordingListener;
+import namesayer.media.RecordingModuleController;
 import javafx.scene.control.Alert.AlertType;
 
-public class RecordScreenController extends CustomController {
+public class RecordScreenController extends CustomController implements RecordingListener {
 
 	@FXML
 	private ListView<Creation> creationList;
@@ -26,6 +35,9 @@ public class RecordScreenController extends CustomController {
 	
 	private Creation selectedCreation;
 	private Recording selectedRecording;
+
+	BasicMediaPlayerController mediaPlayerController;
+	RecordingModuleController recordingController;
 	
 	@Override
 	public void init() {
@@ -33,6 +45,7 @@ public class RecordScreenController extends CustomController {
 		updateRecordingList();
 		
 		setupListeners();
+		setupMediaPlayer();
 	}
 	
 	private void updateCreationList() {
@@ -65,6 +78,8 @@ public class RecordScreenController extends CustomController {
 				selectedCreation = newValue;
 				
 				updateRecordingList();
+				recordingList.getSelectionModel().clearSelection();
+				recordingList.getSelectionModel().selectFirst();
 			}
 			
 		});
@@ -74,9 +89,31 @@ public class RecordScreenController extends CustomController {
 			@Override
 			public void changed(ObservableValue<? extends Recording> observable, Recording oldValue, Recording newValue) {
 				selectedRecording = newValue;
+				
+				if (selectedRecording == null) {
+					mediaPlayerController.setRecording(null);
+				} else {
+					mediaPlayerController.setRecording(selectedRecording.getFile());
+				}
 			}
 			
 		});
+	}
+	
+	private void setupMediaPlayer() {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("media"
+					+ File.separator + "MediaPlayerPaneBasic.fxml"));
+			Pane mediaPlayerPane = loader.load();
+			
+			mediaPlayerController = loader.getController();
+
+			mediaPlayerPane.setLayoutX(250);
+			mediaPlayerPane.setLayoutY(375);
+			rootPane.getChildren().add(mediaPlayerPane);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void newName() {
@@ -124,7 +161,29 @@ public class RecordScreenController extends CustomController {
 	}
 	
 	public void newRecording() {
+		if (selectedCreation == null) {
+			return;
+		}
 		
+		try {
+			Stage recordingStage = new Stage();
+			
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("media"
+					+ File.separator + "RecordingPane.fxml"));
+			Pane recordingPane = loader.load();
+			
+			Scene recordingScene = new Scene(recordingPane, 400, 300);
+			recordingScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			
+			recordingController = loader.getController();
+			recordingController.init();
+			recordingController.setCreation(selectedCreation);
+			
+			recordingStage.setScene(recordingScene);
+			recordingStage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void deleteRecording() {
@@ -178,6 +237,18 @@ public class RecordScreenController extends CustomController {
 		}
 		
 		updateRecordingList();
+	}
+	
+	public void goMain() {
+		mainListener.goMain();
+	}
+
+	@Override
+	public void recordingFinished(File recordingFile, Creation creation) {
+		Recording newRecording = new Recording(creation, recordingFile);
+		creation.addRecording(newRecording);
+		
+		creations.saveState();
 	}
 	
 }

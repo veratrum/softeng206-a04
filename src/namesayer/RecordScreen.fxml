@@ -7,15 +7,15 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.RecordScreenController">
    <children>
-      <ListView fx:id="creationList" layoutX="14.0" layoutY="98.0" prefHeight="405.0" prefWidth="200.0" />
-      <ListView fx:id="recordingList" layoutX="252.0" layoutY="98.0" prefHeight="275.0" prefWidth="458.0" />
-      <Label layoutX="433.0" layoutY="446.0" text="media player here" />
+      <ListView fx:id="creationList" layoutX="15.0" layoutY="100.0" prefHeight="405.0" prefWidth="200.0" />
+      <ListView fx:id="recordingList" layoutX="250.0" layoutY="100.0" prefHeight="275.0" prefWidth="450.0" />
       <Label layoutX="96.0" layoutY="24.0" text="Names" />
       <Label layoutX="451.0" layoutY="24.0" text="Recordings" />
-      <Button onAction="#newName" layoutX="35.0" layoutY="64.0" mnemonicParsing="false" text="New" />
-      <Button onAction="#deleteName" layoutX="123.0" layoutY="64.0" mnemonicParsing="false" text="Delete" />
-      <Button onAction="#newRecording" layoutX="393.0" layoutY="64.0" mnemonicParsing="false" text="New" />
-      <Button onAction="#deleteRecording" layoutX="455.0" layoutY="64.0" mnemonicParsing="false" text="Delete" />
-      <Button onAction="#rateRecording" layoutX="528.0" layoutY="64.0" mnemonicParsing="false" text="Rate" />
+      <Button layoutX="35.0" layoutY="64.0" mnemonicParsing="false" onAction="#newName" text="New" />
+      <Button layoutX="123.0" layoutY="64.0" mnemonicParsing="false" onAction="#deleteName" text="Delete" />
+      <Button layoutX="393.0" layoutY="64.0" mnemonicParsing="false" onAction="#newRecording" text="New" />
+      <Button layoutX="456.0" layoutY="64.0" mnemonicParsing="false" onAction="#deleteRecording" text="Delete" />
+      <Button layoutX="528.0" layoutY="64.0" mnemonicParsing="false" onAction="#rateRecording" text="Rate" />
+      <Button layoutX="737.0" layoutY="20.0" mnemonicParsing="false" onAction="#goMain" text="Back" />
    </children>
 </Pane>
