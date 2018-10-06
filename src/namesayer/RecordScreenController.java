@@ -177,6 +177,7 @@ public class RecordScreenController extends CustomController implements Recordin
 			
 			recordingController = loader.getController();
 			recordingController.init();
+			recordingController.setCreations(creations);
 			recordingController.setCreation(selectedCreation);
 			
 			recordingStage.setScene(recordingScene);
