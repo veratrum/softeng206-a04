@@ -16,6 +16,7 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.TargetDataLine;
 
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -26,7 +27,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import namesayer.Creation;
 import namesayer.Creations;
-import wav.WavFile;
 
 /**
  * Audio recording code adapted from:
@@ -49,6 +49,8 @@ public class RecordingModuleController implements Initializable {
 	private volatile boolean isRecording;
 
 	private TargetDataLine line;
+	
+	private RecordingListener recordingListener;
 
 	public RecordingModuleController() {
 
@@ -74,6 +76,10 @@ public class RecordingModuleController implements Initializable {
 		this.creation = creation;
 
 		recordingText.setText("Press the button below and say the name " + creation.getName() + ".");
+	}
+	
+	public void setRecordingListener(RecordingListener listener) {
+		this.recordingListener = listener;
 	}
 
 	public void recordClicked() {
@@ -105,13 +111,16 @@ public class RecordingModuleController implements Initializable {
 
 	private void recordAudio() {
 		try {
-
 			AudioFormat format = getAudioFormat();
 			DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
 			
 			TargetDataLine line = (TargetDataLine) AudioSystem.getLine(info);
 			line.open(format);
 			line.start();
+
+			String filename = "userdata" + File.separator +
+					creations.generateRecordingFilename(creation.getName());
+			File outputFile = new File(filename);
 
 			/*
 			 * having two threads might seem a bit unintuitive
@@ -122,9 +131,7 @@ public class RecordingModuleController implements Initializable {
 				@Override
 				protected Void call() throws Exception {
 					AudioInputStream ais = new AudioInputStream(line);
-					String filename = "userdata" + File.separator +
-							creations.generateRecordingFilename(creation.getName());
-					AudioSystem.write(ais, AudioFileFormat.Type.WAVE, new File(filename));
+					AudioSystem.write(ais, AudioFileFormat.Type.WAVE, outputFile);
 					
 					return null;
 				}
@@ -140,6 +147,8 @@ public class RecordingModuleController implements Initializable {
 
 						line.stop();
 						line.close();
+						
+						recordingListener.recordingFinished(outputFile, creation);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

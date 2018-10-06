@@ -109,8 +109,10 @@ public class RecordScreenController extends CustomController implements Recordin
 			
 			mediaPlayerController = loader.getController();
 
-			mediaPlayerPane.setLayoutX(250);
-			mediaPlayerPane.setLayoutY(375);
+			//mediaPlayerPane.setLayoutX(250);
+			//mediaPlayerPane.setLayoutY(375);
+			mediaPlayerPane.setLayoutX(317);
+			mediaPlayerPane.setLayoutY(461);
 			rootPane.getChildren().add(mediaPlayerPane);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -124,7 +126,6 @@ public class RecordScreenController extends CustomController implements Recordin
 	public void deleteName() {
 		// dialog code modified from https://code.makery.ch/blog/javafx-dialogs-official/
 		Alert alert = new Alert(AlertType.CONFIRMATION);
-		
 
 		DialogPane dialogPane = alert.getDialogPane();
 		dialogPane.getStylesheets().add(getClass().getResource("dialog.css").toExternalForm());
@@ -185,6 +186,7 @@ public class RecordScreenController extends CustomController implements Recordin
 			recordingController.init();
 			recordingController.setCreations(creations);
 			recordingController.setCreation(selectedCreation);
+			recordingController.setRecordingListener(this);
 			
 			recordingStage.setScene(recordingScene);
 			recordingStage.show();
@@ -261,6 +263,13 @@ public class RecordScreenController extends CustomController implements Recordin
 		creation.addRecording(newRecording);
 		
 		creations.saveState();
+		
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				updateRecordingList();
+			}
+		});
 	}
 	
 }
