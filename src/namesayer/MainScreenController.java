@@ -22,8 +22,10 @@ public class MainScreenController extends CustomController {
 	
 	public void GoToProgressScreen(ActionEvent event) {
 		mainListener.goProgress();
-		
-			
+	}
+	
+	public void GoToHelpScreen(ActionEvent event) {
+		mainListener.goHelp();
 	}
 	
 }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.doPracticeScr">
+   <children>
+      <Button layoutX="169.0" layoutY="245.0" mnemonicParsing="false" text="Next" />
+      <Label layoutX="35.0" layoutY="34.0" text="Playing" />
+      <Label layoutX="278.0" layoutY="34.0" text="Label" />
+      <Line endX="300.0" layoutX="101.0" layoutY="218.0" startX="-100.0" />
+      <Line endX="100.0" layoutX="193.0" layoutY="150.0" rotate="90.0" startX="-100.0" />
+   </children>
+</Pane>

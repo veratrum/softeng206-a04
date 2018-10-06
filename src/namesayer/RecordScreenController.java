@@ -18,6 +18,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -123,6 +124,11 @@ public class RecordScreenController extends CustomController implements Recordin
 	public void deleteName() {
 		// dialog code modified from https://code.makery.ch/blog/javafx-dialogs-official/
 		Alert alert = new Alert(AlertType.CONFIRMATION);
+		
+
+		DialogPane dialogPane = alert.getDialogPane();
+		dialogPane.getStylesheets().add(getClass().getResource("dialog.css").toExternalForm());
+		
 		alert.setTitle("Delete selected Names");
 		alert.setHeaderText(null);
 		alert.setContentText("Are you sure you want to delete the Name " + selectedCreation.getName()
@@ -193,6 +199,11 @@ public class RecordScreenController extends CustomController implements Recordin
 		
 		// dialog code modified from https://code.makery.ch/blog/javafx-dialogs-official/
 		Alert alert = new Alert(AlertType.CONFIRMATION);
+		
+
+		DialogPane dialogPane = alert.getDialogPane();
+		dialogPane.getStylesheets().add(getClass().getResource("dialog.css").toExternalForm());
+		
 		alert.setTitle("Delete selected Recordings");
 		alert.setHeaderText(null);
 		alert.setContentText("Are you sure you want to delete the selected Recording of Name " + selectedRecording.getCreation().getName() + "?");
