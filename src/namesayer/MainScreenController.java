@@ -28,4 +28,8 @@ public class MainScreenController extends CustomController {
 		mainListener.goHelp();
 	}
 	
+	public void GoToImportScreen(ActionEvent event) {
+		mainListener.goImport();
+	}
+	
 }

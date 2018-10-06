@@ -51,6 +51,16 @@ public class Creations {
 		return creations;
 	}
 	
+	public List<Recording> getAllRecordings() {
+		List<Recording> allRecordings = new ArrayList<Recording>();
+		
+		for (Creation creation: creations) {
+			allRecordings.addAll(creation.getRecordings());
+		}
+		
+		return allRecordings;
+	}
+	
 	public boolean creationExists(String name) {
 		for (Creation creation: creations) {
 			if (creation.getName().equals(name)) {

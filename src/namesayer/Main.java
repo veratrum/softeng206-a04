@@ -65,7 +65,7 @@ public class Main extends Application implements MainListener {
 		helpScene = loadScene("HelpScreen.fxml", 800, 600);
 		//helpScene.getStylesheets().add(getClass().getClassLoader().getResource("application.css").toExternalForm());
 
-		importScene = loadScene("MainScreen.fxml", 800, 600);
+		importScene = loadScene("ImportScreen.fxml", 800, 600);
 		//importScene.getStylesheets().add(getClass().getClassLoader().getResource("application.css").toExternalForm());
 		
 		progressScene = loadScene("ProgressScreen.fxml", 800, 600);
