@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="pane" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.HelpScreenController">
+   <children>
+      <Button layoutX="45.0" layoutY="540.0" mnemonicParsing="false" onAction="#GoToMainScreen" text="Back" />
+      <TextArea fx:id="helpText" layoutX="30.0" layoutY="52.0" prefHeight="470.0" prefWidth="738.0" />
+      <Label layoutX="213.0" layoutY="10.0" text="How to Use Namesayer">
+         <font>
+            <Font name="KacstOne Bold" size="27.0" />
+         </font>
+      </Label>
+   </children>
+</Pane>

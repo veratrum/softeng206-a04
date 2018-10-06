@@ -1,6 +1,7 @@
 package namesayer;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.SequenceInputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,10 +19,13 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
@@ -48,18 +52,18 @@ public class PracticeScreenController extends CustomController {
 
 	// fields used for user feedback to track their progress
 	private Optional<String> userRating;
-	protected List<String> allUserRatings = new ArrayList<String>(); // Note: this is package visibility as we need to access this in the ProgressScreenController class!
-	
-	
-	
+
+
+
+
 	@Override
 	public void init() {
 		updateFirstNameList();
 		updateLastNameList();
 	}
 
-	
-	
+
+
 	// code modified from: https://stackoverflow.com/questions/47757368/javafx-radio-buttons-inside-listview-selectionmodel?rq=1
 	private void updateFirstNameList() {
 		ObservableList<Creation> firstNameDataList = FXCollections.observableArrayList(creations.getCreations());
@@ -226,6 +230,10 @@ public class PracticeScreenController extends CustomController {
 		if (playlist.getItems().size() > 1) {
 			// ask the user if they want to randomise the order when there is more than one name in the playlist
 			Alert confirmation = new Alert(AlertType.CONFIRMATION);
+			
+			DialogPane dialogPane = confirmation.getDialogPane();
+			dialogPane.getStylesheets().add(getClass().getResource("dialog.css").toExternalForm());
+			
 			confirmation.setTitle("Play Recordings");
 			confirmation.setHeaderText("Play Multiple Recordings");
 			confirmation.setContentText("You have selected to play multuple recordings\ndo you wish to shuffle the order the selected\nrecordings are played in?");
@@ -242,7 +250,7 @@ public class PracticeScreenController extends CustomController {
 					ObservableList<String> playList = playlist.getItems();
 					ArrayList<String> namesToPlay = new ArrayList<String>();
 
-					// Changing the type from an Observable list s
+					// Changing the type from an Observable list
 					for ( String name : playList) {
 						namesToPlay.add(name);
 					}
@@ -255,34 +263,8 @@ public class PracticeScreenController extends CustomController {
 						playName(names);
 					}
 
-					new Thread(new Runnable() {
-						@Override public void run() {
-							Platform.runLater(new Runnable() {
-								@Override public void run() {
-									// Now we need to ask the user how they think they did in their last attempt so we can track their progress.
-									List<String> choices = new ArrayList<>();
-									choices.add("1");choices.add("2");choices.add("3");choices.add("4");choices.add("5");choices.add("6");choices.add("7");choices.add("8");choices.add("9");choices.add("10");
+					askUserForRating();
 
-
-									ChoiceDialog<String> dialog = new ChoiceDialog<>("1", choices);
-									dialog.setTitle("Rate your progress");
-									dialog.setHeaderText("How do you think you performed for your playlist?");
-									dialog.setContentText("Rating:");
-
-									// Getting the users self rating.
-									userRating = dialog.showAndWait();
-									
-									// Adding the user rating to the array which stores all past user ratings - if it is present
-									if(userRating.isPresent()) {
-										allUserRatings.add(userRating.get());
-									}
-									
-								}
-							});
-
-						}
-					}).start();
-					
 					return null;
 				}
 			};
@@ -294,7 +276,7 @@ public class PracticeScreenController extends CustomController {
 
 		}
 		// Otherwise don't prompt the user to shuffle as there is no need
-		else {
+		else if (playlist.getItems().size() != 0) {
 			Task<Void> task = new Task<Void>() {
 				@Override
 				protected Void call() throws Exception {
@@ -306,6 +288,7 @@ public class PracticeScreenController extends CustomController {
 						playName(names);
 					}
 
+					askUserForRating();
 
 					return null;
 				}
@@ -317,6 +300,47 @@ public class PracticeScreenController extends CustomController {
 
 
 
+
+
+	}
+
+
+	/**
+	 * This method is used to get the users rating on how good they beleive their performance for the last playlist was
+	 */
+	public void askUserForRating() {
+		new Thread(new Runnable() {
+			@Override public void run() {
+				Platform.runLater(new Runnable() {
+					@Override public void run() {
+						// Now we need to ask the user how they think they did in their last attempt so we can track their progress.
+						List<String> choices = new ArrayList<>();
+						choices.add("1");choices.add("2");choices.add("3");choices.add("4");choices.add("5");choices.add("6");choices.add("7");choices.add("8");choices.add("9");choices.add("10");
+
+
+						ChoiceDialog<String> dialog = new ChoiceDialog<>("1", choices);
+						
+						DialogPane dialogPane = dialog.getDialogPane();
+						dialogPane.getStylesheets().add(getClass().getResource("dialog.css").toExternalForm());
+						
+						
+						dialog.setTitle("Rate your progress");
+						dialog.setHeaderText("How do you think you performed for your playlist?");
+						dialog.setContentText("Rating:");
+
+						// Getting the users self rating.
+						userRating = dialog.showAndWait();
+
+						// Adding the user rating to the array which stores all past user ratings - if it is present
+						if(userRating.isPresent()) {
+							allUserRatings.add(userRating.get());
+						}
+
+					}
+				});
+
+			}
+		}).start();
 	}
 
 	/**
@@ -453,8 +477,17 @@ public class PracticeScreenController extends CustomController {
 	 * This method is called when the user presses the associated button to clear the radioButton selections.
 	 */
 	public void clearNameSelection() {
-		firstNameGroup.getSelectedToggle().setSelected(false);
-		lastNameGroup.getSelectedToggle().setSelected(false);
+
+		
+		// If a toggle is selected - then clear it
+		if(firstNameGroup.getSelectedToggle() != null) {
+			firstNameGroup.getSelectedToggle().setSelected(false);
+		}
+		
+		// If a toggle is selected - then clear it
+		if(lastNameGroup.getSelectedToggle() != null) {
+			lastNameGroup.getSelectedToggle().setSelected(false);
+		}
 	}
 	// code modified from: https://stackoverflow.com/questions/47757368/javafx-radio-buttons-inside-listview-selectionmodel?rq=1
 	private class RadioListCell extends ListCell<RadioButton>

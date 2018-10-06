@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.MainScreenController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.MainScreenController">
    <children>
-      <Label layoutX="283.0" layoutY="31.0" text="Namesayer">
+      <Label layoutX="257.0" layoutY="41.0" text="Namesayer">
          <font>
-            <Font size="41.0" />
+            <Font name="KacstOne Bold" size="41.0" />
          </font>
       </Label>
-      <Button layoutX="44.0" layoutY="519.0" mnemonicParsing="false" text="Help" />
-      <Button layoutX="130.0" layoutY="520.0" mnemonicParsing="false" text="Progress" onAction="#GoToProgressScreen" />
-      <Button onAction="#GoToRecordScreen" layoutX="445.0" layoutY="252.0" mnemonicParsing="false" prefHeight="73.0" prefWidth="144.0" text="Record" />
-      <Button onAction="#GoToPracticeScreen" layoutX="180.0" layoutY="249.0" mnemonicParsing="false" prefHeight="80.0" prefWidth="144.0" text="Practice" />
+      <Button layoutX="236.0" layoutY="402.0" mnemonicParsing="false" onAction="#GoToHelpScreen" prefHeight="25.0" prefWidth="147.0" text="Help" />
+      <Button layoutX="400.0" layoutY="402.0" mnemonicParsing="false" onAction="#GoToProgressScreen" prefHeight="25.0" prefWidth="137.0" text="Progress" />
+      <Button layoutX="235.0" layoutY="300.0" mnemonicParsing="false" onAction="#GoToRecordScreen" prefHeight="73.0" prefWidth="304.0" text="Record" />
+      <Button layoutX="235.0" layoutY="189.0" mnemonicParsing="false" onAction="#GoToPracticeScreen" prefHeight="80.0" prefWidth="304.0" text="Practice" />
    </children>
+   <styleClass>
+      <String fx:value="background" />
+      <String fx:value="pane" />
+   </styleClass>
 </Pane>

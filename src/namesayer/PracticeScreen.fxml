@@ -6,24 +6,33 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.PracticeScreenController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="pane" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.PracticeScreenController">
    <children>
-      <Label layoutX="322.0" layoutY="27.0" text="Practice">
+      <Label layoutX="297.0" text="Practice">
          <font>
-            <Font size="39.0" />
+            <Font name="KacstOne Bold" size="39.0" />
          </font>
       </Label>
-      <ListView fx:id="firstNameList" layoutX="39.0" layoutY="124.0" prefHeight="328.0" prefWidth="200.0" />
-      <ListView fx:id="lastNameList" layoutX="287.0" layoutY="124.0" prefHeight="328.0" prefWidth="200.0" />
-      <ListView fx:id="playlist" layoutX="538.0" layoutY="124.0" prefHeight="328.0" prefWidth="200.0" />
-      <Label layoutX="39.0" layoutY="101.0" text="First Name:" />
-      <Label layoutX="287.0" layoutY="101.0" text="Last Name:" />
-      <Label layoutX="538.0" layoutY="101.0" text="Playlist:" />
-      <Button layoutX="293.0" layoutY="490.0" mnemonicParsing="false" onAction="#addNameToPlaylist" prefHeight="25.0" prefWidth="188.0" text="Add To Playlist" />
-      <Button layoutX="552.0" layoutY="523.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="188.0" text="Remove" onAction="#removeNameFromPlayList"/>
-      <Button layoutX="29.0" layoutY="561.0" mnemonicParsing="false" text="Return To Home" onAction="#GoToMainScreen"/>
-      <Button layoutX="51.0" layoutY="490.0" mnemonicParsing="false" onAction="#clearNameSelection" prefHeight="25.0" prefWidth="188.0" text="Clear Name Selection" />
-      <Button layoutX="550.0" layoutY="458.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="188.0" text="Play All" onAction="#playPlaylist" />
-      <Button layoutX="552.0" layoutY="490.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="188.0" text="Play Selected" onAction="#playSelectedName" />
+      <ListView fx:id="firstNameList" layoutX="18.0" layoutY="124.0" prefHeight="328.0" prefWidth="250.0" />
+      <ListView fx:id="lastNameList" layoutX="275.0" layoutY="124.0" prefHeight="328.0" prefWidth="250.0" />
+      <ListView fx:id="playlist" layoutX="536.0" layoutY="124.0" prefHeight="328.0" prefWidth="250.0" />
+      <Label layoutX="18.0" layoutY="101.0" prefHeight="21.0" prefWidth="125.0" text="First Name:">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <Label layoutX="275.0" layoutY="101.0" text="Last Name:">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <Label layoutX="537.0" layoutY="101.0" text="Playlist:">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <Button layoutX="165.0" layoutY="464.0" mnemonicParsing="false" onAction="#addNameToPlaylist" prefHeight="53.0" prefWidth="221.0" text="Add To Playlist" />
+      <Button layoutX="543.0" layoutY="519.0" mnemonicParsing="false" onAction="#removeNameFromPlayList" prefHeight="25.0" prefWidth="111.0" text="Remove" />
+      <Button layoutX="18.0" layoutY="561.0" mnemonicParsing="false" onAction="#GoToMainScreen" text="Back" />
+      <Button layoutX="165.0" layoutY="519.0" mnemonicParsing="false" onAction="#clearNameSelection" prefHeight="25.0" prefWidth="221.0" text="Clear Name Selection" />
+      <Button layoutX="543.0" layoutY="464.0" mnemonicParsing="false" onAction="#playPlaylist" prefHeight="53.0" prefWidth="236.0" text="Play All" />
+      <Button layoutX="668.0" layoutY="519.0" mnemonicParsing="false" onAction="#playSelectedName" prefHeight="25.0" prefWidth="111.0" text="Play Selected" />
    </children>
 </Pane>

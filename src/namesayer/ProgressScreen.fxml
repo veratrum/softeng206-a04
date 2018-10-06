@@ -5,17 +5,17 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.ProgressScreenController">
+<Pane id="progressGraph" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="pane" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.ProgressScreenController">
    <children>
-      <BarChart id="barGraph" layoutX="23.0" layoutY="37.0" prefHeight="486.0" prefWidth="754.0" title="Namesayer Progress">
+      <Button layoutX="23.0" layoutY="559.0" mnemonicParsing="false" onAction="#GoToMainScreen" text="Back" />
+      <Button layoutX="326.0" layoutY="539.0" mnemonicParsing="false" onAction="#updateProgress" prefHeight="41.0" prefWidth="163.0" text="Update My Progress" />
+      <LineChart fx:id="progressGraph" layoutX="75.0" layoutY="58.0" prefHeight="463.0" prefWidth="650.0" title="Namesayer Progress">
         <xAxis>
-          <CategoryAxis id="barGraphPerformanceAxis" label="Attempt" nodeOrientation="LEFT_TO_RIGHT" prefHeight="0.0" prefWidth="426.0" />
+          <CategoryAxis side="BOTTOM" />
         </xAxis>
         <yAxis>
-          <NumberAxis id="barGraphAttemptAxis" label="Your Performance Rating" prefHeight="406.0" prefWidth="41.0" side="LEFT" upperBound="10.0" />
+          <NumberAxis side="LEFT" />
         </yAxis>
-      </BarChart>
-      <Button layoutX="64.0" layoutY="546.0" mnemonicParsing="false" onAction="#GoToMainScreen" text="Return To Home" />
-      <Button layoutX="236.0" layoutY="546.0" mnemonicParsing="false" text="Update My Progress" onAction="#updateProgress"/>
+      </LineChart>
    </children>
 </Pane>

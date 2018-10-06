@@ -2,6 +2,8 @@ package namesayer;
 	
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -24,6 +26,8 @@ public class Main extends Application implements MainListener {
 	private Scene progressScene;
 	
 	private Creations creations;
+	protected List<String> allUserRatings = new ArrayList<String>();
+	
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -58,7 +62,7 @@ public class Main extends Application implements MainListener {
 		practiceScene = loadScene("PracticeScreen.fxml", 800, 600);
 		//practiceScene.getStylesheets().add(getClass().getClassLoader().getResource("application.css").toExternalForm());
 
-		helpScene = loadScene("MainScreen.fxml", 800, 600);
+		helpScene = loadScene("HelpScreen.fxml", 800, 600);
 		//helpScene.getStylesheets().add(getClass().getClassLoader().getResource("application.css").toExternalForm());
 
 		importScene = loadScene("MainScreen.fxml", 800, 600);
@@ -66,6 +70,7 @@ public class Main extends Application implements MainListener {
 		
 		progressScene = loadScene("ProgressScreen.fxml", 800, 600);
 		//progressScene.getStylesheets().add(getClass().getClassLoader().getResource("application.css").toExternalForm());
+	
 	}
 	
 	private Scene loadScene(String fxmlPath, int width, int height) throws IOException {
@@ -78,6 +83,7 @@ public class Main extends Application implements MainListener {
 		controller.setRootPane(root);
 		controller.setMainListener(this);
 		controller.setCreations(creations);
+		controller.setAllUsersRating(allUserRatings);
 		controller.init();
 		
 		return scene;
@@ -112,4 +118,6 @@ public class Main extends Application implements MainListener {
 	public void goProgress() {
 		stage.setScene(progressScene);
 	}
+	
+	
 }
