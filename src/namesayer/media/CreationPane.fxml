@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.media.CreationModuleController">
+   <children>
+      <Separator layoutY="229.0" prefWidth="400.0" />
+      <Button layoutX="274.0" layoutY="252.0" mnemonicParsing="false" onAction="#okClicked" text="OK" />
+      <Button layoutX="323.0" layoutY="252.0" mnemonicParsing="false" onAction="#cancelClicked" text="Cancel" />
+      <Label layoutX="127.0" layoutY="24.0" text="Enter the new Name below." />
+      <TextField fx:id="nameField" layoutX="150.0" layoutY="130.0" />
+      <Label layoutX="100.0" layoutY="135.0" text="Name:" />
+      <CheckBox fx:id="newRecordingCheckBox" layoutX="101.0" layoutY="180.0" mnemonicParsing="false" text="Create a recording for this name?" />
+      <Label fx:id="requirements1" layoutX="77.0" layoutY="51.0" text="A Name must be between 1 and 32 characters." textFill="#dd0000" />
+      <Label fx:id="requirements2" layoutX="94.0" layoutY="68.0" text="A Name must begin with a capital letter." textFill="#dd0000" />
+      <Label fx:id="requirements3" layoutX="67.0" layoutY="85.0" text="A Name may only contain letters and underscores." textFill="#dd0000" />
+      <Label fx:id="requirements4" layoutX="133.0" layoutY="51.0" text="That name already exists." textFill="#dd0000" />
+   </children>
+</Pane>

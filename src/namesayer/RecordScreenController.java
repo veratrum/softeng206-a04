@@ -23,11 +23,13 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import namesayer.media.BasicMediaPlayerController;
+import namesayer.media.CreationListener;
+import namesayer.media.CreationModuleController;
 import namesayer.media.RecordingListener;
 import namesayer.media.RecordingModuleController;
 import javafx.scene.control.Alert.AlertType;
 
-public class RecordScreenController extends CustomController implements RecordingListener {
+public class RecordScreenController extends CustomController implements CreationListener, RecordingListener {
 
 	@FXML
 	private ListView<Creation> creationList;
@@ -39,6 +41,7 @@ public class RecordScreenController extends CustomController implements Recordin
 
 	BasicMediaPlayerController mediaPlayerController;
 	RecordingModuleController recordingController;
+	CreationModuleController creationController;
 	
 	@Override
 	public void init() {
@@ -47,6 +50,9 @@ public class RecordScreenController extends CustomController implements Recordin
 		
 		setupListeners();
 		setupMediaPlayer();
+
+		creationList.getSelectionModel().selectFirst();
+		recordingList.getSelectionModel().selectFirst();
 	}
 	
 	private void updateCreationList() {
@@ -120,7 +126,26 @@ public class RecordScreenController extends CustomController implements Recordin
 	}
 	
 	public void newName() {
-		
+		try {
+			Stage creationStage = new Stage();
+			
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("media"
+					+ File.separator + "CreationPane.fxml"));
+			Pane creationPane = loader.load();
+			
+			Scene creationScene = new Scene(creationPane, 400, 300);
+			creationScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			
+			creationController = loader.getController();
+			creationController.init();
+			creationController.setCreations(creations);
+			creationController.setCreationListener(this);
+			
+			creationStage.setScene(creationScene);
+			creationStage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void deleteName() {
@@ -172,6 +197,13 @@ public class RecordScreenController extends CustomController implements Recordin
 			return;
 		}
 		
+		doNewRecording(selectedCreation);
+	}
+	
+	/**
+	 * Helper function used by both newCreation and newRecording buttons
+	 */
+	private void doNewRecording(Creation creation) {
 		try {
 			Stage recordingStage = new Stage();
 			
@@ -185,7 +217,7 @@ public class RecordScreenController extends CustomController implements Recordin
 			recordingController = loader.getController();
 			recordingController.init();
 			recordingController.setCreations(creations);
-			recordingController.setCreation(selectedCreation);
+			recordingController.setCreation(creation);
 			recordingController.setRecordingListener(this);
 			
 			recordingStage.setScene(recordingScene);
@@ -268,8 +300,27 @@ public class RecordScreenController extends CustomController implements Recordin
 			@Override
 			public void run() {
 				updateRecordingList();
+				recordingList.getSelectionModel().select(newRecording);
 			}
 		});
+	}
+
+	@Override
+	public void creationFinished(Creation creation, boolean newRecording) {
+		creations.addCreation(creation);
+		
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				updateCreationList();
+				creationList.getSelectionModel().select(creation);
+			}
+		});
+		
+		// if the user wanted to create a new recording for the new creation
+		if (newRecording) {
+			doNewRecording(creation);
+		}
 	}
 	
 }

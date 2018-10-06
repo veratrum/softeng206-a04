@@ -25,6 +25,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 import namesayer.Creation;
 import namesayer.Creations;
 
@@ -32,6 +33,11 @@ import namesayer.Creations;
  * Audio recording code adapted from:
  * https://www.java-tips.org/java-se-tips-100019/120-javax-sound/917-capturing-audio-with-java-sound-api.html
  *
+ *
+ * TODO: in final version
+ * -- add a media player module on this screen after the user records a name
+ * that is only enabled when a recording has been done and isn't currently in progress
+ * -- add OK/Cancel buttons to supplement this
  */
 public class RecordingModuleController implements Initializable {
 
@@ -93,7 +99,71 @@ public class RecordingModuleController implements Initializable {
 	}
 
 	public void testMicrophone() {
+		Thread sampleAudio = new Thread(new Task<Void>() {
+			@Override
+			protected Void call() throws Exception {
+				// modified from http://proteo.me.uk/2009/10/sound-level-monitoring-in-java/
+				double micSum = 0.0;
+				AudioFormat audioFormat = getAudioFormat();
 
+				TargetDataLine targetDataLine;
+				try {
+					targetDataLine = (TargetDataLine) AudioSystem.getTargetDataLine(audioFormat);
+
+					// Setting up the targetDataLine
+					targetDataLine.open();
+					targetDataLine.start();
+
+
+					//byte [] buffer = new byte[2000];
+					// using a larger buffer since the sample rate has increased from assignment 3...
+					byte [] buffer = new byte[10000];
+					for (int i=0; i<25; i++) {
+						int bytesRead = targetDataLine.read(buffer,0,buffer.length);
+
+						short max;
+						if (bytesRead >=0) {
+							max = (short) (buffer[0] + (buffer[1] << 8));
+							for (int p=2;p<bytesRead-1;p+=2) {
+								short thisValue = (short) (buffer[p] + (buffer[p+1] << 8));
+								if (thisValue>max) max=thisValue;
+							}
+							if(max >= 0 ) {
+								double micLevel = max/1000.0; //Note: this calculation for mic volume test is based on an approximation of what I determined to be low/average/loud speaking volume.
+								if (micLevel > 1.0) {
+									micLevel = 1.0;
+								}
+								micSum = micSum + micLevel;
+							}
+						}
+					}
+
+					targetDataLine.close();
+				} catch (LineUnavailableException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return null;
+				}
+
+				// Setting the progressBar mic Input level
+				microphoneLevel.setProgress(micSum/25);
+
+				return null;
+			}
+		});
+		sampleAudio.start();
+
+		// Create a new background thread to reset the mic volume meter after 5 seconds.
+		Thread resetMeter = new Thread(new Task<Void>() {
+			@Override
+			protected Void call() throws Exception {
+				Thread.sleep(5000);
+				microphoneLevel.setProgress(0.0);
+
+				return null;
+			}
+		});
+		resetMeter.start();
 	}
 
 	private void setRecordingState(boolean recording) {
@@ -149,6 +219,8 @@ public class RecordingModuleController implements Initializable {
 						line.close();
 						
 						recordingListener.recordingFinished(outputFile, creation);
+						
+						closeWindow();
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -177,5 +249,16 @@ public class RecordingModuleController implements Initializable {
 		boolean signed = true;
 		boolean bigEndian = true;
 		return new AudioFormat(sampleRate, sampleSizeInBits, channels, signed, bigEndian);
+	}
+	
+	private void closeWindow() {
+		// adapted from https://stackoverflow.com/questions/13567019/close-fxml-window-by-code-javafx
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				Stage stage = (Stage) recordButton.getScene().getWindow();
+				stage.close();
+			}
+		});
 	}
 }
