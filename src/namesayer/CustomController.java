@@ -5,6 +5,7 @@ import java.util.List;
 
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 /**
  * Basic controller.
@@ -25,7 +26,24 @@ public class CustomController {
 		
 	}
 	
+	/**
+	 * Called at the start of the application
+	 */
 	public void init() {
+		
+	}
+	
+	/**
+	 * Called whenever the scene is entered
+	 */
+	public void load() {
+		
+	}
+	
+	/**
+	 * Called whenever the scene is exited
+	 */
+	public void dispose() {
 		
 	}
 	

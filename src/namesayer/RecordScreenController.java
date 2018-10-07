@@ -55,6 +55,21 @@ public class RecordScreenController extends CustomController implements Creation
 		recordingList.getSelectionModel().selectFirst();
 	}
 	
+	@Override
+	public void load() {
+		updateCreationList();
+		updateRecordingList();
+		
+		if (selectedRecording != null) {
+			mediaPlayerController.setRecording(selectedRecording.getFile());
+		}
+	}
+	
+	@Override
+	public void dispose() {
+		
+	}
+	
 	private void updateCreationList() {
 		ObservableList<Creation> creationDataList = FXCollections.observableArrayList(creations.getCreations());
 		

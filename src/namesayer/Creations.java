@@ -14,6 +14,19 @@ public class Creations {
 		creations = new ArrayList<Creation>();
 		creationLoader = new CreationLoader(this);
 
+		loadData();
+	}
+
+	/**
+	 * Called whenever the database has been loaded/imported externally i.e. not at the start of
+	 * Namesayer's execution
+	 */
+	public void reloadData() {
+		loadData();
+		creationLoader.saveSeparateRatingsFile();
+	}
+	
+	private void loadData() {
 		creationLoader.loadMetadata();
 	}
 	
@@ -39,6 +52,18 @@ public class Creations {
 		creations.remove(creation);
 		
 		sortCreations();
+		
+		creationLoader.saveMetadata();
+	}
+	
+	public void deleteAll() {
+		for (int i = 0; i < creations.size(); i++) {
+			Creation creation = creations.get(i);
+			
+			creation.delete();
+		}
+		
+		creations = new ArrayList<Creation>();
 		
 		creationLoader.saveMetadata();
 	}
@@ -109,7 +134,7 @@ public class Creations {
 		return repeatName;
 	}
 	
-	public boolean isValidName(String name) {
+	public static boolean isValidName(String name) {
 		if (name.length() == 0 || name.length() > 32) {
 			return false;
 		}
