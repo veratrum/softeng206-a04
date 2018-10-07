@@ -32,4 +32,8 @@ public class MainScreenController extends CustomController {
 		mainListener.goImport();
 	}
 	
+	public void exit() {
+		System.exit(0);
+	}
+	
 }

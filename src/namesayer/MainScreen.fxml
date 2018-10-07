@@ -8,7 +8,7 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.MainScreenController">
    <children>
-      <Label layoutX="257.0" layoutY="41.0" text="Namesayer">
+      <Label layoutX="286.0" layoutY="54.0" text="Namesayer">
          <font>
             <Font name="KacstOne Bold" size="41.0" />
          </font>
@@ -18,6 +18,7 @@
       <Button layoutX="235.0" layoutY="300.0" mnemonicParsing="false" onAction="#GoToRecordScreen" prefHeight="73.0" prefWidth="304.0" text="Record" />
       <Button layoutX="235.0" layoutY="189.0" mnemonicParsing="false" onAction="#GoToPracticeScreen" prefHeight="80.0" prefWidth="304.0" text="Practice" />
       <Button layoutX="453.0" layoutY="402.0" mnemonicParsing="false" onAction="#GoToImportScreen" prefHeight="27.0" prefWidth="86.0" text="Import" />
+      <Button layoutX="14.0" layoutY="559.0" mnemonicParsing="false" onAction="#exit" text="Exit" />
    </children>
    <styleClass>
       <String fx:value="background" />
