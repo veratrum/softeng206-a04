@@ -39,9 +39,17 @@ public class ImportEntryModuleController extends CustomController {
 			
 			commas = Utils.concatenate(commas, fragment);
 		}
+
+		String[] hyphens = new String[0];
+		for (String comma: commas) {
+			// split by hyphen
+			String[] fragment = comma.split("-");
+			
+			hyphens = Utils.concatenate(hyphens, fragment);
+		}
 		
 		List<String> names = new ArrayList<String>();
-		for (String name: commas) {
+		for (String name: hyphens) {
 			if (!Creations.isValidName(name)) {
 				continue;
 			}

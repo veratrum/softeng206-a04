@@ -24,13 +24,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
-/**
- * 
- * TODO
- * prompt user with file picker
- * generate zip asynchronously
- *
- */
 public class ImportScreenController extends CustomController implements ImportListener {
 
 	/**
