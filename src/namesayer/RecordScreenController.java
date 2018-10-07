@@ -147,9 +147,15 @@ public class RecordScreenController extends CustomController implements Creation
 	public void newName() {
 		try {
 			Stage creationStage = new Stage();
-			
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("media"
-					+ File.separator + "CreationPane.fxml"));
+
+			File src = new File("src");
+			File namesayer = new File(src, "namesayer");
+			File media = new File(namesayer, "media");
+			File loaderPath = new File(media, "CreationPane.fxml");
+			URL path = loaderPath.toURI().toURL();
+			FXMLLoader loader = new FXMLLoader(path);
+			/*FXMLLoader loader = new FXMLLoader(getClass().getResource("media"
+					+ File.separator + "CreationPane.fxml"));*/
 			Pane creationPane = loader.load();
 			
 			Scene creationScene = new Scene(creationPane, 400, 300);
@@ -226,8 +232,14 @@ public class RecordScreenController extends CustomController implements Creation
 		try {
 			Stage recordingStage = new Stage();
 			
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("media"
-					+ File.separator + "RecordingPane.fxml"));
+			File src = new File("src");
+			File namesayer = new File(src, "namesayer");
+			File media = new File(namesayer, "media");
+			File loaderPath = new File(media, "RecordingPane.fxml");
+			URL path = loaderPath.toURI().toURL();
+			FXMLLoader loader = new FXMLLoader(path);
+			/*FXMLLoader loader = new FXMLLoader(getClass().getResource("media"
+					+ File.separator + "RecordingPane.fxml"));*/
 			Pane recordingPane = loader.load();
 			
 			Scene recordingScene = new Scene(recordingPane, 400, 300);
