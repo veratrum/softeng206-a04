@@ -19,26 +19,26 @@ public class HelpScreenController extends CustomController {
 	@Override
 	public void init() {
 		helpText.setText("\n" + 
-				"There are three different screens for the Namesayer application\n" + 
+				"There are four different screens for the Namesayer application\n" + 
 				"\n" + 
 				"1) The Practice Screen\n" + 
 				"\n" + 
 				"	The practice screen is used to practice your playlist of names. To add names \n" + 
 				"	to a playlist you click your selection of first and last names and then click \n" + 
-				"	the \"Add to Playlist Button\" \n" + 
+				"	the “Add to Playlist Button” \n" + 
 				"\n" + 
-				"	If you wish to clear your selected names you need to press the \"Clear Name \n" + 
-				"	Selection\" button.\n" + 
+				"	If you wish to clear your selected names you need to press the “Clear Name \n" + 
+				"	Selection” button.\n" + 
 				"\n" + 
 				"	Once you have added the names you wish to practice to your playlist you can \n" + 
-				"	play the playlist by clicking the \"Play All\" button, if there are multiple names\n" + 
+				"	play the playlist by clicking the “Play All” button, if there are multiple names\n" + 
 				"	in the playlist you will be given the option to shuffle the playback order. After \n" + 
 				"	it plays back the playlist you will be asked for a rating of how you well you \n" + 
 				"	think you pronounced the names, this will be used to track your progress in the\n" + 
 				" 	Progress Screen.\n" + 
 				"\n" + 
-				"	You can also click on a single name in the playlist and press the \"Play Selected\"\n" + 
-				"	button to play it or the \"Remove\" button to remove the name from the playlist.\n" + 
+				"	You can also click on a single name in the playlist and press the “Play Selected”\n" + 
+				"	button to play it or the “Remove” button to remove the name from the playlist.\n" + 
 				"\n" + 
 				"	The back button returns you to the main screen of Namesayer.\n" + 
 				"\n" + 
@@ -61,6 +61,15 @@ public class HelpScreenController extends CustomController {
 				"	you have practiced the playlist you have created so that you can track how well \n" + 
 				"	you are improving at pronouncing the names.\n" + 
 				"\n" + 
-				"	The back button returns you to the main screen of Namesayer.");
+				"	The back button returns you to the main screen of Namesayer.\n" + 
+				"\n" + 
+				"4) The Import Screen\n" + 
+				"\n" + 
+				"	The import screen allows you to import a database of recordings, or from a list of\n" + 
+				"	names for which you must add the recordings yourself. \n" + 
+				"\n" + 
+				"	You can also export the database that is currently used for the application, this is \n" + 
+				"	recommended to be done if you are importing a new database as the current \n" + 
+				"	database will be erased.");
 	}
 }
