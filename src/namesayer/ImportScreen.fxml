@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.Pane?>
@@ -7,20 +11,20 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="pane" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.ImportScreenController">
    <children>
-      <Label layoutX="166.0" layoutY="161.0" text="Here you can manage multiple databases by saving and loading them to your filesystem." />
-      <Label layoutX="234.0" layoutY="65.0" text="Import/Export Data">
+      <Label layoutX="108.0" layoutY="166.0" text="Here you can manage multiple databases by saving and loading them to your filesystem." />
+      <Label layoutX="205.0" layoutY="38.0" text="Import/Export Data">
          <font>
             <Font name="KacstOne Bold" size="39.0" />
          </font>
       </Label>
-      <Button layoutX="66.0" layoutY="256.0" mnemonicParsing="false" onAction="#saveDatabase" prefHeight="27.0" prefWidth="111.0" text="Save database" />
-      <Label layoutX="101.0" layoutY="187.0" text="You can also import a databse of Names from a class roll (although you will have to add the Recordings yourself)." />
-      <Button layoutX="66.0" layoutY="309.0" mnemonicParsing="false" onAction="#loadDatabase" prefHeight="27.0" prefWidth="111.0" text="Load database" />
+      <Button layoutX="34.0" layoutY="257.0" mnemonicParsing="false" onAction="#saveDatabase" prefHeight="27.0" prefWidth="149.0" text="Save database" />
+      <Label layoutX="29.0" layoutY="187.0" text="You can also import a databse of Names from a class roll (although you will have to add the Recordings yourself)." />
+      <Button layoutX="34.0" layoutY="308.0" mnemonicParsing="false" onAction="#loadDatabase" prefHeight="27.0" prefWidth="149.0" text="Load database" />
       <Label layoutX="197.0" layoutY="314.0" text="WARNING: This will overwrite your current Names and Recordings. Consider saving first!" textFill="#bb0000" />
       <Label layoutX="197.0" layoutY="366.0" text="WARNING: This will clear your current Names and Recordings. Consider saving first!" textFill="#bb0000" />
-      <Button layoutX="67.0" layoutY="361.0" mnemonicParsing="false" onAction="#clearDatabase" prefHeight="27.0" prefWidth="111.0" text="Clear database" />
+      <Button layoutX="34.0" layoutY="360.0" mnemonicParsing="false" onAction="#clearDatabase" prefHeight="27.0" prefWidth="149.0" text="Clear database" />
       <Label layoutX="197.0" layoutY="420.0" text="WARNING: This will overwrite your current Names and Recordings. Consider saving first!" textFill="#bb0000" />
-      <Button layoutX="67.0" layoutY="415.0" mnemonicParsing="false" onAction="#importDatabase" prefHeight="27.0" prefWidth="111.0" text="Import database" />
+      <Button layoutX="34.0" layoutY="414.0" mnemonicParsing="false" onAction="#importDatabase" prefHeight="27.0" prefWidth="149.0" text="Import database" />
       <Button layoutX="18.0" layoutY="561.0" mnemonicParsing="false" onAction="#goMain" text="Back" />
    </children>
 </Pane>
