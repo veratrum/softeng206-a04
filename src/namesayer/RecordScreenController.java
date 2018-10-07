@@ -2,6 +2,7 @@ package namesayer;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Optional;
 
 import javafx.application.Platform;
@@ -121,8 +122,14 @@ public class RecordScreenController extends CustomController implements Creation
 	
 	private void setupMediaPlayer() {
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("media"
-					+ File.separator + "MediaPlayerPaneBasic.fxml"));
+			File src = new File("src");
+			File namesayer = new File(src, "namesayer");
+			File media = new File(namesayer, "media");
+			File loaderPath = new File(media, "MediaPlayerPaneBasic.fxml");
+			URL path = loaderPath.toURI().toURL();
+			FXMLLoader loader = new FXMLLoader(path);
+			/*FXMLLoader loader = new FXMLLoader(getClass().getResource("media"
+			+ File.separator + "MediaPlayerPaneBasic.fxml"));*/
 			Pane mediaPlayerPane = loader.load();
 			
 			mediaPlayerController = loader.getController();
