@@ -1,7 +1,6 @@
 package namesayer;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.SequenceInputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,10 +18,8 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.DialogPane;

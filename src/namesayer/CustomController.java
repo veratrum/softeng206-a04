@@ -5,7 +5,6 @@ import java.util.List;
 
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 
 /**
  * Basic controller.

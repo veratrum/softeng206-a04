@@ -1,10 +1,6 @@
 package namesayer.media;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -53,8 +49,6 @@ public class RecordingModuleController implements Initializable {
 	private Creations creations;
 	private Creation creation;
 	private volatile boolean isRecording;
-
-	private TargetDataLine line;
 	
 	private RecordingListener recordingListener;
 
