@@ -170,7 +170,7 @@ public class RecordScreenController extends CustomController implements Creation
 		DialogPane dialogPane = alert.getDialogPane();
 		dialogPane.getStylesheets().add(getClass().getResource("dialog.css").toExternalForm());
 		
-		alert.setTitle("Delete selected Names");
+		alert.setTitle("Delete selected Name");
 		alert.setHeaderText(null);
 		alert.setContentText("Are you sure you want to delete the Name " + selectedCreation.getName()
 				+ ", as well as all of its Recordings?");
@@ -256,7 +256,8 @@ public class RecordScreenController extends CustomController implements Creation
 		
 		alert.setTitle("Delete selected Recordings");
 		alert.setHeaderText(null);
-		alert.setContentText("Are you sure you want to delete the selected Recording of Name " + selectedRecording.getCreation().getName() + "?");
+		alert.setContentText("Are you sure you want to delete " + selectedRecording.getFile().getName() +
+				" from the Name " + selectedRecording.getCreation().getName() + "?");
 
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.get() == ButtonType.OK) {

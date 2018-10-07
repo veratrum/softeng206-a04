@@ -95,6 +95,13 @@ public class ImportScreenController extends CustomController implements ImportLi
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("Save Database");
+		alert.setHeaderText(null);
+		alert.setContentText("Saved database successfully.");
+
+		alert.show();
 	}
 
 	/**
@@ -112,12 +119,17 @@ public class ImportScreenController extends CustomController implements ImportLi
 
 		File loadLocation = fileChooser.showOpenDialog(scene.getWindow());
 		
+		// user closed dialog
+		if (loadLocation == null) {
+			return;
+		}
+		
 		File userdata = new File("userdata");
 		userdata.mkdir();
 
-		clearDatabase();
+		doClearDatabase();
 		
-		// delete the empty metadata created by clearDatabase()
+		// delete the zero-node metadata created by doClearDatabase()
 		File metadata = new File(userdata, "metadata.xml");
 		if (metadata.exists()) {
 			metadata.delete();
@@ -176,6 +188,13 @@ public class ImportScreenController extends CustomController implements ImportLi
 			alert.show();
 		} else {
 			creations.reloadData();
+			
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setTitle("Import Database");
+			alert.setHeaderText(null);
+			alert.setContentText("Imported database successfully.");
+
+			alert.show();
 		}
 	}
 
@@ -184,6 +203,17 @@ public class ImportScreenController extends CustomController implements ImportLi
 	 * Deletes all files associated with this data e.g. recording files.
 	 */
 	public void clearDatabase() {
+		doClearDatabase();
+		
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("Clear Database");
+		alert.setHeaderText(null);
+		alert.setContentText("Database cleared successfully.");
+
+		alert.showAndWait();
+	}
+	
+	private void doClearDatabase() {
 		// i have no idea why this works
 		System.gc();
 		try {
@@ -233,11 +263,18 @@ public class ImportScreenController extends CustomController implements ImportLi
 
 	@Override
 	public void importFinished(List<String> names) {
-		clearDatabase();
+		doClearDatabase();
 		
 		for (String name: names) {
 			Creation creation = new Creation(name);
 			creations.addCreationWithoutSaving(creation);
 		}
+		
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("Import Database From Text");
+		alert.setHeaderText(null);
+		alert.setContentText("Database imported successfully.");
+
+		alert.showAndWait();
 	}
 }
