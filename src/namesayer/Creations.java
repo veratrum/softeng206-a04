@@ -10,9 +10,9 @@ public class Creations {
 	private List<Creation> creations;
 	private CreationLoader creationLoader;
 	
-	public Creations() {
+	public Creations(String directory, String xmlFile) {
 		creations = new ArrayList<Creation>();
-		creationLoader = new CreationLoader(this);
+		creationLoader = new CreationLoader(this, directory, xmlFile);
 
 		loadData();
 	}

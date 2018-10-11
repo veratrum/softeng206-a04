@@ -330,7 +330,7 @@ public class PracticeScreenController extends CustomController {
 
 						// Adding the user rating to the array which stores all past user ratings - if it is present
 						if(userRating.isPresent()) {
-							allUserRatings.add(userRating.get());
+							progress.addRating(userRating.get());
 						}
 
 					}

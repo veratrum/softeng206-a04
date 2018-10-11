@@ -19,7 +19,8 @@ public class CustomController {
 	protected Scene scene;
 	protected Pane rootPane;
 	
-	protected List<String> allUserRatings = new ArrayList<String>(); // Note: this is package visibility as we need to access this in the ProgressScreenController class!
+	//protected List<String> allUserRatings = new ArrayList<String>(); // Note: this is package visibility as we need to access this in the ProgressScreenController class!
+	protected Progress progress;
 	
 	public CustomController() {
 		
@@ -62,8 +63,8 @@ public class CustomController {
 		this.rootPane = rootPane;
 	}
 	
-	public void setAllUsersRating(List<String> allUserRatings) {
-		this.allUserRatings = allUserRatings;
+	public void setProgress(Progress progress) {
+		this.progress = progress;
 	}
 	
 }

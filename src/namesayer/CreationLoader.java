@@ -27,13 +27,16 @@ public class CreationLoader {
 	private File userdata;
 	private File metadata;
 	
-	public CreationLoader(Creations creations) {
+	public CreationLoader(Creations creations, String directory, String xmlFile) {
 		this.creations = creations;
+
+		this.userdata = new File(directory);
+		this.metadata = new File(userdata, xmlFile);
 	}
 	
 	/**
-	 * Loads creation names, recording file paths, each creation's 'best' recording,
-	 * and recording quality, that was saved previously as XML.
+	 * Loads creation names, recording file paths, and recording quality,
+	 * that was saved previously as XML.
 	 * 
 	 * If this is run for the first time (and there is no stored data yet), data will
 	 * be generated from the .wav files we were given.
@@ -42,12 +45,9 @@ public class CreationLoader {
 		/* create the userdata directory if it does not already exist.
 		this shouldn't need to happen unless the application is run
 		without the folder of wavs we were given */
-		userdata = new File("userdata");
 		if (!userdata.exists()) {
 			userdata.mkdir();
 		}
-		
-		metadata = new File("userdata" + File.separator + "metadata.xml");
 		
 		if (!metadata.exists()) {
 			firstExecution();

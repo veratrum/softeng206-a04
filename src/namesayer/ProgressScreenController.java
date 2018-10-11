@@ -1,5 +1,7 @@
 package namesayer;
 
+import java.util.List;
+
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -28,6 +30,7 @@ public class ProgressScreenController extends CustomController {
 	}
 
 	public void updateProgress() {
+		List<String> allUserRatings = progress.getRecentRatings();
 
 		// We need to create a background task that gets the progress of the user and creates a data series of it.
 		Task<Void> task = new Task<Void>() {
@@ -40,19 +43,8 @@ public class ProgressScreenController extends CustomController {
 
 
 				// we need to get the data to populate the bar graph
-				if (allUserRatings.size() <= 10) { 
-					for (int i = 0; i < allUserRatings.size(); i++) {
-						dataSeries.getData().add(new XYChart.Data<String, Integer>(Integer.toString(i), Integer.parseInt(allUserRatings.get(i))));
-					}
-				}
-				else if (allUserRatings.size() > 10) {
-
-					// We only want to display the users 10 most recent ratings
-					int userRatingsCount = allUserRatings.size();
-
-					for(int i = userRatingsCount - 10; i < allUserRatings.size(); i++) {
-						dataSeries.getData().add(new XYChart.Data<String, Integer>(Integer.toString(i), Integer.parseInt(allUserRatings.get(i))));
-					}
+				for (int i = 0; i < allUserRatings.size(); i++) {
+					dataSeries.getData().add(new XYChart.Data<String, Integer>(Integer.toString(i), Integer.parseInt(allUserRatings.get(i))));
 				}
 
 

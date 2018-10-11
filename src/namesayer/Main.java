@@ -34,7 +34,8 @@ public class Main extends Application implements MainListener {
 	private CustomController selectedController;
 
 	private Creations creations;
-	protected List<String> allUserRatings = new ArrayList<String>();
+	private Progress progress;
+	//protected List<String> allUserRatings = new ArrayList<String>();
 
 	/**
 	 * Allows us to return both scene and controller from the helper function
@@ -55,6 +56,7 @@ public class Main extends Application implements MainListener {
 		this.stage = primaryStage;
 
 		loadCreations();
+		loadProgress();
 		loadScenes();
 
 		selectedController = mainController;
@@ -68,7 +70,11 @@ public class Main extends Application implements MainListener {
 	}
 
 	private void loadCreations() {
-		creations = new Creations();
+		creations = new Creations("userdata", "metadata.xml");
+	}
+	
+	private void loadProgress() {
+		progress = new Progress();
 	}
 
 	private void loadScenes() {
@@ -114,7 +120,7 @@ public class Main extends Application implements MainListener {
 		controller.setRootPane(root);
 		controller.setMainListener(this);
 		controller.setCreations(creations);
-		controller.setAllUsersRating(allUserRatings);
+		controller.setProgress(progress);
 		controller.init();
 
 		return new ScreenResult(scene, controller);
