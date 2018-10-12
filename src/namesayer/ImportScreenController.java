@@ -26,17 +26,23 @@ import javafx.stage.Stage;
 
 public class ImportScreenController extends CustomController implements ImportListener {
 
+	private File database;
+	
+	public ImportScreenController() {
+		this.database = new File("database");
+	}
+	
 	/**
-	 * Packages every indexed file in the /userdata/ directory into a zip file along with metadata.xml.
+	 * Packages every indexed file in the database directory into a zip file along with metadata.xml.
 	 * Prompts the user to save it on their computer.
 	 */
 	public void saveDatabase() {
-		// all indexed recordings. there could be others in the userdata directory, but we don't care about them
+		// all indexed recordings. there could be others in the database directory, but we don't care about them
 		List<Recording> allRecordings = creations.getAllRecordings();
 
 		List<File> allFiles = new ArrayList<File>();
 
-		allFiles.add(new File("userdata" + File.separator + "metadata.xml"));
+		allFiles.add(new File(database, "metadata.xml"));
 		for (Recording recording: allRecordings) {
 			allFiles.add(recording.getFile());
 		}
@@ -115,13 +121,12 @@ public class ImportScreenController extends CustomController implements ImportLi
 			return;
 		}
 		
-		File userdata = new File("userdata");
-		userdata.mkdir();
+		database.mkdir();
 
 		doClearDatabase();
 		
 		// delete the zero-node metadata created by doClearDatabase()
-		File metadata = new File(userdata, "metadata.xml");
+		File metadata = new File(database, "metadata.xml");
 		if (metadata.exists()) {
 			metadata.delete();
 		}
@@ -134,7 +139,7 @@ public class ImportScreenController extends CustomController implements ImportLi
 			ZipEntry entry = null;
 			try {
 				while ((entry = zis.getNextEntry()) != null) {
-					File file = new File("userdata" + File.separator + entry.getName());
+					File file = new File(database, entry.getName());
 					OutputStream fos = new BufferedOutputStream(new FileOutputStream(file));
 					try {
 						try {

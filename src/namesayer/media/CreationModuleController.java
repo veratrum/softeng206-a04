@@ -30,6 +30,7 @@ public class CreationModuleController extends CustomController implements Initia
 	private Label requirements4;
 	
 	private CreationListener creationListener;
+	private boolean isDatabaseView;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -48,10 +49,19 @@ public class CreationModuleController extends CustomController implements Initia
 		this.creationListener = listener;
 	}
 	
+	public void setIsDatabaseView(boolean isDatabaseView) {
+		this.isDatabaseView = isDatabaseView;
+	}
+	
 	public void okClicked() {
 		String name = nameField.getText();
 		boolean validName = Creations.isValidName(name);
+		
+		// it is impossible to create a new creation in the datbase but in case we changed it later
 		boolean nameExists = creations.creationExists(name);
+		if (!isDatabaseView) {
+			userCreations.creationExists(name);
+		}
 		
 		if (!validName) {
 			requirements1.setVisible(true);
@@ -68,7 +78,7 @@ public class CreationModuleController extends CustomController implements Initia
 			
 			Creation newCreation = new Creation(name);
 			
-			creationListener.creationFinished(newCreation, doNewRecording);
+			creationListener.creationFinished(newCreation, doNewRecording, isDatabaseView);
 			
 			closeWindow();
 		}

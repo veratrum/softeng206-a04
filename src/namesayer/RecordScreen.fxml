@@ -18,17 +18,18 @@
          <font>
             <Font size="18.0" />
          </font></Label>
-      <Button layoutX="144.0" layoutY="468.0" mnemonicParsing="false" onAction="#newName" prefHeight="37.0" prefWidth="112.0" text="New Name" />
-      <Button layoutX="18.0" layoutY="468.0" mnemonicParsing="false" onAction="#deleteName" prefHeight="37.0" prefWidth="112.0" text="Delete Name" />
-      <Button layoutX="629.0" layoutY="415.0" mnemonicParsing="false" onAction="#newRecording" prefHeight="37.0" prefWidth="137.0" text="New Recording" />
-      <Button layoutX="473.0" layoutY="415.0" mnemonicParsing="false" onAction="#deleteRecording" prefHeight="37.0" prefWidth="137.0" text="Delete Recording" />
-      <Button layoutX="316.0" layoutY="415.0" mnemonicParsing="false" onAction="#rateRecording" prefHeight="37.0" prefWidth="137.0" text="Rate Recording" />
+      <Button fx:id="newNameButton" layoutX="144.0" layoutY="468.0" mnemonicParsing="false" onAction="#newName" prefHeight="37.0" prefWidth="112.0" text="New Name" />
+      <Button fx:id="deleteNameButton" layoutX="18.0" layoutY="468.0" mnemonicParsing="false" onAction="#deleteName" prefHeight="37.0" prefWidth="112.0" text="Delete Name" />
+      <Button fx:id="newRecordingButton" layoutX="629.0" layoutY="415.0" mnemonicParsing="false" onAction="#newRecording" prefHeight="37.0" prefWidth="137.0" text="New Recording" />
+      <Button fx:id="deleteRecordingButton" layoutX="473.0" layoutY="415.0" mnemonicParsing="false" onAction="#deleteRecording" prefHeight="37.0" prefWidth="137.0" text="Delete Recording" />
+      <Button fx:id="rateRecordingButton" layoutX="316.0" layoutY="415.0" mnemonicParsing="false" onAction="#rateRecording" prefHeight="37.0" prefWidth="137.0" text="Rate Recording" />
       <Button layoutX="22.0" layoutY="561.0" mnemonicParsing="false" onAction="#goMain" text="Back" />
-      <Label layoutX="200.0" text="Recordings Manager">
+      <Label fx:id="whichViewLabel" layoutX="206.0" layoutY="14.0" text="Database Recordings Manager">
          <font>
             <Font name="KacstOne Bold" size="39.0" />
          </font>
       </Label>
       <Pane layoutX="317.0" layoutY="461.0" prefHeight="125.0" prefWidth="450.0" />
+      <Button fx:id="swapListButton" onAction="#swapLists" layoutX="18.0" layoutY="28.0" mnemonicParsing="false" text="Swap to User Recordings" />
    </children>
 </Pane>

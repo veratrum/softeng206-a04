@@ -6,5 +6,5 @@ import namesayer.Creation;
 
 public interface RecordingListener {
 
-	public void recordingFinished(File recording, Creation creation);
+	public void recordingFinished(File recording, Creation creation, boolean isDatabaseView);
 }

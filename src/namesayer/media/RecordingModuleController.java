@@ -24,6 +24,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import namesayer.Creation;
 import namesayer.Creations;
+import namesayer.CustomController;
 
 /**
  * Audio recording code adapted from:
@@ -35,7 +36,7 @@ import namesayer.Creations;
  * that is only enabled when a recording has been done and isn't currently in progress
  * -- add OK/Cancel buttons to supplement this
  */
-public class RecordingModuleController implements Initializable {
+public class RecordingModuleController extends CustomController implements Initializable {
 
 	@FXML
 	private Button recordButton;
@@ -46,9 +47,9 @@ public class RecordingModuleController implements Initializable {
 
 	private ImageView recordImageView;
 
-	private Creations creations;
 	private Creation creation;
 	private volatile boolean isRecording;
+	private boolean isDatabaseView;
 	
 	private RecordingListener recordingListener;
 
@@ -68,10 +69,6 @@ public class RecordingModuleController implements Initializable {
 		setRecordingState(false);
 	}
 
-	public void setCreations(Creations creations) {
-		this.creations = creations;
-	}
-
 	public void setCreation(Creation creation) {
 		this.creation = creation;
 
@@ -80,6 +77,10 @@ public class RecordingModuleController implements Initializable {
 	
 	public void setRecordingListener(RecordingListener listener) {
 		this.recordingListener = listener;
+	}
+	
+	public void setIsDatabaseView(boolean isDatabaseView) {
+		this.isDatabaseView = isDatabaseView;
 	}
 
 	public void recordClicked() {
@@ -182,9 +183,14 @@ public class RecordingModuleController implements Initializable {
 			line.open(format);
 			line.start();
 
-			String filename = "userdata" + File.separator +
-					creations.generateRecordingFilename(creation.getName());
-			File outputFile = new File(filename);
+			File newFile = null;
+			if (isDatabaseView) {
+				newFile = new File(new File("database"), creations.generateRecordingFilename(creation.getName()));
+			} else {
+				newFile = new File(new File("userdata"), userCreations.generateRecordingFilename(creation.getName()));
+			}
+			
+			File outputFile = newFile;
 
 			/*
 			 * having two threads might seem a bit unintuitive
@@ -212,7 +218,7 @@ public class RecordingModuleController implements Initializable {
 						line.stop();
 						line.close();
 						
-						recordingListener.recordingFinished(outputFile, creation);
+						recordingListener.recordingFinished(outputFile, creation, isDatabaseView);
 						
 						closeWindow();
 					} catch (Exception e) {
