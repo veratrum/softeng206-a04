@@ -16,6 +16,7 @@ public class CustomController {
 
 	protected MainListener mainListener;
 	protected Creations creations;
+	protected Creations userCreations;
 	protected Scene scene;
 	protected Pane rootPane;
 	
@@ -53,6 +54,10 @@ public class CustomController {
 	
 	public void setCreations(Creations creations) {
 		this.creations = creations;
+	}
+	
+	public void setUserCreations(Creations userCreations) {
+		this.userCreations = userCreations;
 	}
 	
 	public void setScene(Scene scene) {

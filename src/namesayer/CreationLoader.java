@@ -77,7 +77,7 @@ public class CreationLoader {
 						Element recordingElement = (Element) recordingNode;
 						
 						String recordingPath = recordingElement.getTextContent();
-						File recordingFile = new File("userdata" + File.separator + recordingPath);
+						File recordingFile = new File(userdata, recordingPath);
 						
 						String isBadString = recordingElement.getAttribute("bad");
 						boolean isBad = isBadString.equals("y");
@@ -223,7 +223,7 @@ public class CreationLoader {
 			}
 		}
 		
-		File ratingsText = new File("userdata" + File.separator + "ratings.txt");
+		File ratingsText = new File(userdata, "ratings.txt");
 		try {
 			ratingsText.createNewFile();
 		} catch (IOException e) {

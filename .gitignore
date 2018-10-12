@@ -1,4 +1,6 @@
 /bin/
+/database/metadata.xml
+/database/ratings.txt
 /userdata/metadata.xml
 /userdata/progressdata.xml
 /userdata/ratings.txt
