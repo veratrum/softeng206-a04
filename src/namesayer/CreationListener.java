@@ -1,6 +1,4 @@
-package namesayer.media;
-
-import namesayer.Creation;
+package namesayer;
 
 public interface CreationListener {
 

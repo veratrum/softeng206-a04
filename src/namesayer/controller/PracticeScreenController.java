@@ -1,4 +1,4 @@
-package namesayer;
+package namesayer.controller;
 
 import java.io.File;
 import java.io.SequenceInputStream;
@@ -20,6 +20,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import namesayer.Creation;
+import namesayer.Recording;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.DialogPane;
@@ -229,7 +231,7 @@ public class PracticeScreenController extends CustomController {
 			Alert confirmation = new Alert(AlertType.CONFIRMATION);
 			
 			DialogPane dialogPane = confirmation.getDialogPane();
-			dialogPane.getStylesheets().add(getClass().getResource("dialog.css").toExternalForm());
+			dialogPane.getStylesheets().add(getClass().getResource("../fxml/dialog.css").toExternalForm());
 			
 			confirmation.setTitle("Play Recordings");
 			confirmation.setHeaderText("Play Multiple Recordings");
@@ -318,7 +320,7 @@ public class PracticeScreenController extends CustomController {
 						ChoiceDialog<String> dialog = new ChoiceDialog<>("1", choices);
 						
 						DialogPane dialogPane = dialog.getDialogPane();
-						dialogPane.getStylesheets().add(getClass().getResource("dialog.css").toExternalForm());
+						dialogPane.getStylesheets().add(getClass().getResource("../fxml/dialog.css").toExternalForm());
 						
 						
 						dialog.setTitle("Rate your progress");

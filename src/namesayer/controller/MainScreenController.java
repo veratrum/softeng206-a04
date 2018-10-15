@@ -1,4 +1,4 @@
-package namesayer;
+package namesayer.controller;
 
 import java.io.IOException;
 

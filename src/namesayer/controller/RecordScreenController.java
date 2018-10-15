@@ -1,4 +1,4 @@
-package namesayer;
+package namesayer.controller;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,11 +23,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import namesayer.media.BasicMediaPlayerController;
-import namesayer.media.CreationListener;
-import namesayer.media.CreationModuleController;
-import namesayer.media.RecordingListener;
-import namesayer.media.RecordingModuleController;
+import namesayer.Creation;
+import namesayer.CreationListener;
+import namesayer.Creations;
+import namesayer.Recording;
+import namesayer.RecordingListener;
 
 public class RecordScreenController extends CustomController implements CreationListener, RecordingListener {
 
@@ -151,8 +151,8 @@ public class RecordScreenController extends CustomController implements Creation
 		try {
 			File src = new File("src");
 			File namesayer = new File(src, "namesayer");
-			File media = new File(namesayer, "media");
-			File loaderPath = new File(media, "MediaPlayerPaneBasic.fxml");
+			File fxml = new File(namesayer, "fxml");
+			File loaderPath = new File(fxml, "MediaPlayerPaneBasic.fxml");
 			URL path = loaderPath.toURI().toURL();
 			FXMLLoader loader = new FXMLLoader(path);
 			/*FXMLLoader loader = new FXMLLoader(getClass().getResource("media"
@@ -177,16 +177,17 @@ public class RecordScreenController extends CustomController implements Creation
 
 			File src = new File("src");
 			File namesayer = new File(src, "namesayer");
-			File media = new File(namesayer, "media");
-			File loaderPath = new File(media, "CreationPane.fxml");
+			File fxml = new File(namesayer, "fxml");
+			File loaderPath = new File(fxml, "CreationPane.fxml");
 			URL path = loaderPath.toURI().toURL();
 			FXMLLoader loader = new FXMLLoader(path);
 			/*FXMLLoader loader = new FXMLLoader(getClass().getResource("media"
 					+ File.separator + "CreationPane.fxml"));*/
 			Pane creationPane = loader.load();
+			
+			creationPane.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
 			Scene creationScene = new Scene(creationPane, 400, 300);
-			creationScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
 			creationController = loader.getController();
 			creationController.init();
@@ -211,7 +212,7 @@ public class RecordScreenController extends CustomController implements Creation
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 
 		DialogPane dialogPane = alert.getDialogPane();
-		dialogPane.getStylesheets().add(getClass().getResource("dialog.css").toExternalForm());
+		dialogPane.getStylesheets().add(getClass().getResource("../fxml/dialog.css").toExternalForm());
 
 		alert.setTitle("Delete selected Name");
 		alert.setHeaderText(null);
@@ -271,8 +272,8 @@ public class RecordScreenController extends CustomController implements Creation
 
 			File src = new File("src");
 			File namesayer = new File(src, "namesayer");
-			File media = new File(namesayer, "media");
-			File loaderPath = new File(media, "RecordingPane.fxml");
+			File fxml = new File(namesayer, "fxml");
+			File loaderPath = new File(fxml, "RecordingPane.fxml");
 			URL path = loaderPath.toURI().toURL();
 			FXMLLoader loader = new FXMLLoader(path);
 			/*FXMLLoader loader = new FXMLLoader(getClass().getResource("media"
@@ -280,7 +281,6 @@ public class RecordScreenController extends CustomController implements Creation
 			Pane recordingPane = loader.load();
 
 			Scene recordingScene = new Scene(recordingPane, 400, 300);
-			recordingScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
 			recordingController = loader.getController();
 			recordingController.init();
@@ -307,7 +307,7 @@ public class RecordScreenController extends CustomController implements Creation
 
 
 		DialogPane dialogPane = alert.getDialogPane();
-		dialogPane.getStylesheets().add(getClass().getResource("dialog.css").toExternalForm());
+		dialogPane.getStylesheets().add(getClass().getResource("../fxml/dialog.css").toExternalForm());
 
 		alert.setTitle("Delete selected Recordings");
 		alert.setHeaderText(null);

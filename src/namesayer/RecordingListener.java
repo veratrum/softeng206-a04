@@ -1,8 +1,6 @@
-package namesayer.media;
+package namesayer;
 
 import java.io.File;
-
-import namesayer.Creation;
 
 public interface RecordingListener {
 

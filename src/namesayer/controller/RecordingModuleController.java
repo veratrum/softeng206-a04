@@ -1,4 +1,4 @@
-package namesayer.media;
+package namesayer.controller;
 
 import java.io.File;
 import java.net.URL;
@@ -24,7 +24,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import namesayer.Creation;
 import namesayer.Creations;
-import namesayer.CustomController;
+import namesayer.RecordingListener;
 
 /**
  * Audio recording code adapted from:

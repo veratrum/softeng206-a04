@@ -1,4 +1,4 @@
-package namesayer;
+package namesayer.controller;
 
 public class PlayScreenSecondAttemptController extends CustomController {
 
