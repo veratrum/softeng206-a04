@@ -218,6 +218,11 @@ public class ImportScreenController extends CustomController implements ImportLi
 			e.printStackTrace();
 		}
 		System.gc();
+		
+		File metadata = new File(database, "metadata.xml");
+		metadata.delete();
+		File ratings = new File(database, "ratings.txt");
+		ratings.delete();
 
 		creations.deleteAll();
 	}
