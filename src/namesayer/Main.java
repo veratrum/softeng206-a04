@@ -1,5 +1,6 @@
 package namesayer;
 
+import java.io.File;
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -8,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import namesayer.controller.CustomController;
 
 
 public class Main extends Application implements MainListener {
@@ -113,7 +115,7 @@ public class Main extends Application implements MainListener {
 	}
 
 	private ScreenResult loadScene(String fxmlPath, int width, int height) {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("fxml" + File.separator + fxmlPath));
 		Pane root = null;
 
 		try {

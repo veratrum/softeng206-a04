@@ -1,4 +1,4 @@
-package namesayer;
+package namesayer.controller;
 
 import java.util.ArrayList;
 
@@ -14,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Alert.AlertType;
+import namesayer.Creation;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;

@@ -1,4 +1,4 @@
-package namesayer;
+package namesayer.controller;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -22,6 +22,10 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import namesayer.Creation;
+import namesayer.ImportListener;
+import namesayer.Recording;
+import namesayer.Utils;
 import javafx.stage.Stage;
 
 public class ImportScreenController extends CustomController implements ImportListener {
@@ -218,6 +222,11 @@ public class ImportScreenController extends CustomController implements ImportLi
 			e.printStackTrace();
 		}
 		System.gc();
+		
+		File metadata = new File(database, "metadata.xml");
+		metadata.delete();
+		File ratings = new File(database, "ratings.txt");
+		ratings.delete();
 
 		creations.deleteAll();
 	}
@@ -230,13 +239,14 @@ public class ImportScreenController extends CustomController implements ImportLi
 	 */
 	public void importDatabase() {
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("ImportEntryModule.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxml/ImportEntryModule.fxml"));
 			Pane importModulePane = loader.load();
 			
-			ImportEntryModuleController controller = loader.getController();
-			controller.setImportListener(this);
-			
 			Scene importScene = new Scene(importModulePane, 400, 300);
+			
+			ImportEntryModuleController controller = loader.getController();
+			controller.setScene(importScene);
+			controller.setImportListener(this);
 			
 			Stage importModule = new Stage();
 			importModule.setScene(importScene);
@@ -272,5 +282,10 @@ public class ImportScreenController extends CustomController implements ImportLi
 		alert.setContentText("Database imported successfully.");
 
 		alert.showAndWait();
+	}
+
+	@Override
+	public void importFinishedSorted(List<List<String>> names) {
+		
 	}
 }

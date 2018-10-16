@@ -1,4 +1,4 @@
-package namesayer;
+package namesayer.controller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import namesayer.Creations;
+import namesayer.MainListener;
+import namesayer.Progress;
 
 /**
  * Basic controller.

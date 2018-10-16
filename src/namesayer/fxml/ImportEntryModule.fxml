@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane stylesheets="@application.css" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" styleClass="pane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.controller.ImportEntryModuleController">
+   <children>
+      <Button layoutX="323.0" layoutY="248.0" mnemonicParsing="false" onAction="#cancelClicked" text="Cancel" />
+      <Button layoutX="272.0" layoutY="248.0" mnemonicParsing="false" onAction="#okClicked" text="OK" />
+      <TextArea fx:id="importText" layoutX="25.0" layoutY="50.0" prefHeight="175.0" prefWidth="350.0" />
+      <Label layoutX="144.0" layoutY="8.0" text="Enter a list of Names." />
+      <Label layoutX="54.0" layoutY="25.0" text="They can be separated by spaces, commas, or newlines." />
+      <Button layoutX="24.0" layoutY="248.0" mnemonicParsing="false" onAction="#loadFileClicked" text="Load file" />
+   </children>
+</Pane>
