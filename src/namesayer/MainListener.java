@@ -17,4 +17,6 @@ public interface MainListener {
 	public void goMain();
 
 	public void goProgress();
+	
+	public void goPlaylist();
 }

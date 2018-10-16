@@ -12,7 +12,7 @@ public class MainScreenController extends CustomController {
 	 * @throws IOException 
 	 */
 	public void GoToPracticeScreen(ActionEvent event) throws IOException {
-		mainListener.goPractice();
+		mainListener.goPlaylist();
 	}
 	
 	public void GoToRecordScreen(ActionEvent event) {

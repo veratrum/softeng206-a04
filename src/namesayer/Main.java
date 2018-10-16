@@ -1,10 +1,9 @@
 package namesayer;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -21,6 +20,7 @@ public class Main extends Application implements MainListener {
 	private Scene helpScene;
 	private Scene importScene;
 	private Scene progressScene;
+	private Scene playlistScene;
 
 	private CustomController mainController;
 	private CustomController recordController;
@@ -28,6 +28,7 @@ public class Main extends Application implements MainListener {
 	private CustomController helpController;
 	private CustomController importController;
 	private CustomController progressController;
+	private CustomController playlistController;
 
 	/* the currently selected scene's controller. we need this to call its dispose method
 	before changing to a different scene */
@@ -36,6 +37,9 @@ public class Main extends Application implements MainListener {
 	private Creations creations;
 	private Creations userCreations;
 	private Progress progress;
+
+	// Creating a field to store the playlistData so that it can be accessed between create a playlist and play a playlist screens.
+	private ObservableList<String> playlistData  = FXCollections.observableArrayList();;
 
 	/**
 	 * Allows us to return both scene and controller from the helper function
@@ -73,7 +77,7 @@ public class Main extends Application implements MainListener {
 		creations = new Creations("database", "metadata.xml");
 		userCreations = new Creations("userdata", "metadata.xml");
 	}
-	
+
 	private void loadProgress() {
 		progress = new Progress();
 	}
@@ -102,18 +106,22 @@ public class Main extends Application implements MainListener {
 		result = loadScene("ProgressScreen.fxml", 800, 600);
 		progressScene = result.scene;
 		progressController = result.controller;
+
+		result = loadScene("PlaylistScreen.fxml", 800, 600);
+		playlistScene = result.scene;
+		playlistController = result.controller;
 	}
 
 	private ScreenResult loadScene(String fxmlPath, int width, int height) {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
 		Pane root = null;
-		
+
 		try {
 			root = loader.load();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		CustomController controller = loader.getController();
 		Scene scene = new Scene(root, width, height);
 
@@ -123,6 +131,7 @@ public class Main extends Application implements MainListener {
 		controller.setCreations(creations);
 		controller.setUserCreations(userCreations);
 		controller.setProgress(progress);
+		controller.setPlaylist(playlistData);
 		controller.init();
 
 		return new ScreenResult(scene, controller);
@@ -173,6 +182,14 @@ public class Main extends Application implements MainListener {
 		selectedController.dispose();
 		stage.setScene(progressScene);
 		selectedController = progressController;
+		selectedController.load();
+	}
+
+	@Override
+	public void goPlaylist() {
+		selectedController.dispose();
+		stage.setScene(playlistScene);
+		selectedController = playlistController;
 		selectedController.load();
 	}
 

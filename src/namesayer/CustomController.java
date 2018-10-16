@@ -3,6 +3,8 @@ package namesayer;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 
@@ -22,6 +24,9 @@ public class CustomController {
 	
 	//protected List<String> allUserRatings = new ArrayList<String>(); // Note: this is package visibility as we need to access this in the ProgressScreenController class!
 	protected Progress progress;
+	
+	// Creating a field to store the playlist data so that it can be accessed between create a playlist and play a playlist screens.
+	protected ObservableList<String> playlistData = FXCollections.observableArrayList();
 	
 	public CustomController() {
 		
@@ -70,6 +75,10 @@ public class CustomController {
 	
 	public void setProgress(Progress progress) {
 		this.progress = progress;
+	}
+	
+	public void setPlaylist(ObservableList<String> playlistData) {
+		this.playlistData = playlistData;
 	}
 	
 }

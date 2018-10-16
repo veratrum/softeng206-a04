@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="pane" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.PlaylistScreenController">
+   <children>
+      <Label layoutX="191.0" layoutY="18.0" text="Create a Playlist">
+         <font>
+            <Font name="System Bold" size="45.0" />
+         </font>
+      </Label>
+      <ListView fx:id="namesList" layoutX="23.0" layoutY="134.0" prefHeight="373.0" prefWidth="231.0" />
+      <ListView fx:id="playlist" layoutX="536.0" layoutY="105.0" prefHeight="402.0" prefWidth="216.0" />
+      <TextField fx:id="nameToAddToPlaylist" layoutX="254.0" layoutY="378.0" prefHeight="25.0" prefWidth="275.0" />
+      <Button layoutX="254.0" layoutY="403.0" mnemonicParsing="false" onAction="#addNameToPlaylist" prefHeight="25.0" prefWidth="120.0" text="Add To Playlist" />
+      <Button layoutX="538.0" layoutY="514.0" mnemonicParsing="false" onAction="#removeNameFromPlaylist" prefHeight="25.0" prefWidth="120.0" text="Remove" />
+      <Button layoutX="392.0" layoutY="403.0" mnemonicParsing="false" onAction="#clearNameSelection" prefHeight="25.0" prefWidth="120.0" text="Clear Name" />
+      <Button layoutX="23.0" layoutY="514.0" mnemonicParsing="false" onAction="#addToNameSelection" text="Add to Current Name" />
+      <Button layoutX="661.0" layoutY="514.0" mnemonicParsing="false" onAction="#importAPlaylist" text="Import A Playlist" />
+      <Label layoutX="345.0" layoutY="363.0" text="Name To Add:" />
+      <Label layoutX="23.0" layoutY="85.0" text="Names In Database:" />
+      <Label layoutX="536.0" layoutY="85.0" text="Playlist" />
+      <Button layoutX="536.0" layoutY="544.0" mnemonicParsing="false" onAction="#exportAPlaylist" text="Export A Playlist" />
+      <TextField fx:id="nameToSearchFor" layoutX="23.0" layoutY="100.0" prefHeight="25.0" prefWidth="181.0" />
+      <Button layoutX="14.0" layoutY="559.0" mnemonicParsing="false" onAction="#returnToMainScreen" text="Back" />
+      <Button layoutX="670.0" layoutY="545.0" mnemonicParsing="false" onAction="#startPlaylist" prefHeight="27.0" prefWidth="120.0" text="Start Playlist" />
+   </children>
+</Pane>
