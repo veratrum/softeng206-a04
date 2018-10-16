@@ -1,6 +1,8 @@
 package namesayer.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -11,16 +13,21 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import namesayer.Creation;
+import namesayer.ImportListener;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 
 
-public class PlaylistScreenController extends CustomController {
+public class PlaylistScreenController extends CustomController implements ImportListener {
 
 	// Declaring the fields used in the controller
 	@FXML
@@ -185,7 +192,22 @@ public class PlaylistScreenController extends CustomController {
 	}
 
 	public void importAPlaylist() {
-
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxml/ImportEntryModule.fxml"));
+			Pane importModulePane = loader.load();
+			
+			Scene importScene = new Scene(importModulePane, 400, 300);
+			
+			ImportEntryModuleController controller = loader.getController();
+			controller.setScene(importScene);
+			controller.setImportListener(this);
+			
+			Stage importModule = new Stage();
+			importModule.setScene(importScene);
+			importModule.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void exportAPlaylist() {
@@ -270,6 +292,30 @@ public class PlaylistScreenController extends CustomController {
 
 	public ObservableList<String> getPlaylist(){
 		return playlist.getItems();
+	}
+
+	@Override
+	public void importFinished(List<String> names) {
+		// do nothing
+	}
+
+	@Override
+	public void importFinishedSorted(List<List<String>> names) {
+		for (List<String> list: names) {
+			String name = "";
+			
+			for (int i = 0; i < list.size(); i++) {
+				name += list.get(i);
+				
+				if (i != list.size() - 1) {
+					name += " ";
+				}
+			}
+			
+			if (name != "") {
+				playlist.getItems().add(name);
+			}
+		}
 	}
 
 }

@@ -32,6 +32,7 @@ public class BasicMediaPlayerController implements Initializable {
 	private File recording;
 	
 	private boolean isPlaying;
+	private boolean isDisabled;
 	
 	public void playClicked() {
 		if (clip == null || recording == null) {
@@ -93,15 +94,31 @@ public class BasicMediaPlayerController implements Initializable {
 		setButtonState(false);
 	}
 	
+	public void setDisabled(boolean isDisabled) {
+		this.isDisabled = isDisabled;
+		
+		playButton.setDisable(isDisabled);
+		
+		setButtonState(this.isPlaying);
+	}
+	
 	private void setButtonState(boolean playing) {
 		isPlaying = playing;
 
 		Image playImage;
 		
 		if (isPlaying) {
-			playImage = new Image("file:img" + File.separator + "pause.png");
+			if (isDisabled) {
+				playImage = new Image("file:img" + File.separator + "pause_disabled.png");
+			} else {
+				playImage = new Image("file:img" + File.separator + "pause.png");
+			}
 		} else {
-			playImage = new Image("file:img" + File.separator + "play.png");
+			if (isDisabled) {
+				playImage = new Image("file:img" + File.separator + "play_disabled.png");
+			} else {
+				playImage = new Image("file:img" + File.separator + "play.png");
+			}
 		}
 		
 		buttonImageView.setImage(playImage);
