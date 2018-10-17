@@ -56,8 +56,22 @@ public class PlaylistScreenController extends CustomController implements Import
 	//=== Event handlers for the buttons on the play screen ===//
 
 	public void startPlaylist() {
-		playlistData.addAll(getPlaylist());
-		mainListener.goPractice();
+		
+		if (getPlaylist().size() == 0 || getPlaylist() == null) {
+			
+			Alert alert = new Alert(AlertType.ERROR);
+			DialogPane dialogPane = alert.getDialogPane();
+			dialogPane.getStylesheets().add(getClass().getResource("dialog.css").toExternalForm());
+			alert.setTitle("Playlist Error");
+			alert.setHeaderText("No Playlist Created");
+			alert.setContentText("Error you have not yet created a playlist\nplease create a playlist first!");
+
+			alert.showAndWait();
+		}
+		else {
+			playlistData.addAll(getPlaylist());
+			mainListener.goPractice();
+		}
 	}
 	public void addNameToPlaylist() {
 

@@ -15,9 +15,9 @@
          </font>
       </Label>
       <Button layoutX="33.0" layoutY="559.0" mnemonicParsing="false" text="Back" onAction="#returnToHome"/>
-      <Button layoutX="39.0" layoutY="438.0" mnemonicParsing="false" prefHeight="76.0" prefWidth="164.0" text="Previous" />
-      <Button layoutX="601.0" layoutY="444.0" mnemonicParsing="false" prefHeight="70.0" prefWidth="164.0" text="Next" />
-      <Text id="currentName" layoutX="337.0" layoutY="234.0" strokeType="OUTSIDE" strokeWidth="0.0" text="[NAME]">
+      <Button fx:id="previousButton" layoutX="39.0" layoutY="438.0" mnemonicParsing="false" prefHeight="76.0" prefWidth="164.0" text="Previous" onAction="#previousName"/>
+      <Button fx:id="nextButton" layoutX="601.0" layoutY="444.0" mnemonicParsing="false" prefHeight="70.0" prefWidth="164.0" text="Next" onAction="#nextName"/>
+      <Text fx:id="currentName" layoutX="337.0" layoutY="234.0" strokeType="OUTSIDE" strokeWidth="0.0" text="[NAME]">
          <font>
             <Font name="System Bold" size="33.0" />
          </font>
