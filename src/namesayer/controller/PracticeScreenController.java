@@ -9,6 +9,7 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -38,14 +39,12 @@ public class PracticeScreenController extends CustomController { // I need to do
 	@FXML
 	Button previousButton;
 
-	private String currentRecordingLocation;
+	private File currentRecordingFile;
 
 	private BasicMediaPlayerController mediaPlayerController;
 
 	@Override
 	public void init() {
-		currentRecordingLocation = "";
-
 		initMediaPlayer();
 	}
 
@@ -109,9 +108,14 @@ public class PracticeScreenController extends CustomController { // I need to do
 
 			@Override
 			protected void done() {
-				String currentName = playlistData.get(playlistPositionCounter);
-
-
+				Platform.runLater(new Task<Void>() {
+					@Override
+					public Void call() {
+						mediaPlayerController.setRecording(currentRecordingFile);
+						
+						return null;
+					}
+				});
 			}
 		};
 		new Thread(task).start();
@@ -144,9 +148,9 @@ public class PracticeScreenController extends CustomController { // I need to do
 
 			// If there is only one file then just return that audio file.
 			if(parsedName.length == 1) {
-				File audioFile = new File("Playlist/" + currentName + ".wav");
+				currentRecordingFile = new File("Playlist/" + currentName + ".wav");
 				clip1 = AudioSystem.getAudioInputStream(new File(creations.getCreationByName(parsedName[0]).getRandomGoodRecording().getFile().toString()));
-				AudioSystem.write(clip1 ,AudioFileFormat.Type.WAVE, audioFile);
+				AudioSystem.write(clip1 ,AudioFileFormat.Type.WAVE, currentRecordingFile);
 
 			}
 			else { // Otherwise Iterating over the parsed name to create the audioFile.
@@ -170,8 +174,8 @@ public class PracticeScreenController extends CustomController { // I need to do
 					appendedFiles = new AudioInputStream(new SequenceInputStream(clip1, clip2),clip1.getFormat(),clip1.getFrameLength() + clip2.getFrameLength());
 
 					if(i == parsedName.length - 2) { // then this is the last iteration so we need to save the file.
-						File meregedRecordingFile = new File("Playlist/" + currentName + ".wav");
-						AudioSystem.write(appendedFiles,AudioFileFormat.Type.WAVE, meregedRecordingFile);
+						currentRecordingFile = new File("Playlist/" + currentName + ".wav");
+						AudioSystem.write(appendedFiles,AudioFileFormat.Type.WAVE, currentRecordingFile);
 					}
 					else { // save it as a temporary file
 						tempFile = new File("Playlist/temp.wav");
