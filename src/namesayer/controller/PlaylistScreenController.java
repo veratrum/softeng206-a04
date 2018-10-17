@@ -56,17 +56,8 @@ public class PlaylistScreenController extends CustomController implements Import
 	//=== Event handlers for the buttons on the play screen ===//
 
 	public void startPlaylist() {
+		playlistData.addAll(getPlaylist());
 		mainListener.goPractice();
-
-		Task<Void> task = new Task<Void>() {
-
-			@Override
-			protected Void call() throws Exception {
-				playlistData.addAll(getPlaylist());
-				return null;
-			}
-		};
-		new Thread(task).start();
 	}
 	public void addNameToPlaylist() {
 

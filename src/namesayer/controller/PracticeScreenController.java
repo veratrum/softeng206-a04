@@ -23,7 +23,10 @@ public class PracticeScreenController extends CustomController { // I need to do
 	@FXML
 	Text nextName;
 
-
+	@Override
+	public void load() {
+		setPreviousAndNextNames();
+	}
 
 	// We need some counter to know how far we are through the playlist
 	private int playlistPositionCounter  = 0;
@@ -159,7 +162,7 @@ public class PracticeScreenController extends CustomController { // I need to do
 	}
 
 	public void setPreviousAndNextNames() {
-
+		
 		if (playlistPositionCounter != playlistData.size() - 1) {
 			nextName.setText(playlistData.get(playlistPositionCounter + 1).toString());
 		}
@@ -175,5 +178,6 @@ public class PracticeScreenController extends CustomController { // I need to do
 		else {
 			previousName.setText("No previous Name");
 		}
+		
 	}
 }
