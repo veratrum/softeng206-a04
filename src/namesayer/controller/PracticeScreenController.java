@@ -20,16 +20,16 @@ public class PracticeScreenController extends CustomController { // I need to do
 
 	@FXML
 	Text previousName;
-	
+
 	@FXML
 	Text nextName;
-	
+
 	@FXML 
 	Text currentName;
-	
+
 	@FXML
 	Button nextButton;
-	
+
 	@FXML
 	Button previousButton;
 
@@ -44,21 +44,29 @@ public class PracticeScreenController extends CustomController { // I need to do
 	private boolean needToCreateAudioFile = true;
 
 
-	// ======================= Below are the event handelers to this controller class ====================================
-	
-	
+	// ======================= Below are the event handlers to this controller class ====================================
+
+
 	public void returnToHome() {
 		mainListener.goMain();
 	}
 
 	public void nextName() {
+		if(playlistPositionCounter != playlistData.size()) {
+			playlistPositionCounter++;
+		}
+		
+		
 		
 	}
-	
+
 	public void previousName() {
+		if(playlistPositionCounter != 0) {
+			playlistPositionCounter--;
+		}
 		
 	}
-	
+
 	public void playNameFromDatabase() {
 
 		// Creating a background task to create the audioFile for the name and play it
@@ -128,12 +136,17 @@ public class PracticeScreenController extends CustomController { // I need to do
 			// If there is only one file then just return that audio file.
 			if(parsedName.length == 1) {
 				File audioFile = new File("Playlist/" + currentName + ".wav");
+				
+				if () {
+					
+				}
+				
 				clip1 = AudioSystem.getAudioInputStream(new File(creations.getCreationByName(parsedName[0]).getRandomGoodRecording().getFile().toString()));
 				AudioSystem.write(clip1 ,AudioFileFormat.Type.WAVE, audioFile);
-				
+
 			}
 			else { // Otherwise Iterating over the parsed name to create the audioFile.
-				
+
 				for (int i = 0; i < parsedName.length - 1; i++) {
 
 					if (i == 0) { // first iteration so we need to get two recordings.
@@ -181,7 +194,7 @@ public class PracticeScreenController extends CustomController { // I need to do
 	}
 
 	public void setPreviousAndNextAndCurrentNames() {
-		
+
 		if (playlistPositionCounter != playlistData.size() - 1) {
 			nextName.setText(playlistData.get(playlistPositionCounter + 1).toString());
 		}
@@ -197,8 +210,8 @@ public class PracticeScreenController extends CustomController { // I need to do
 		else {
 			previousName.setText("No previous Name");
 		}
-		
+
 		currentName.setText(playlistData.get(playlistPositionCounter).toString());
-		
+
 	}
 }
