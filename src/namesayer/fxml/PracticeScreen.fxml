@@ -6,7 +6,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="pane" stylesheets="@application.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.controller.PracticeScreenController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="pane" stylesheets="@application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.controller.PracticeScreenController">
    <children>
       <Label layoutX="296.0" layoutY="28.0" text="Practice ">
          <font>
@@ -14,9 +14,9 @@
          </font>
       </Label>
       <Button layoutX="33.0" layoutY="559.0" mnemonicParsing="false" onAction="#returnToHome" text="Back" />
-      <Button layoutX="39.0" layoutY="438.0" mnemonicParsing="false" prefHeight="76.0" prefWidth="164.0" text="Previous" />
-      <Button layoutX="601.0" layoutY="444.0" mnemonicParsing="false" prefHeight="70.0" prefWidth="164.0" text="Next" />
-      <Text id="currentName" layoutX="337.0" layoutY="138.0" strokeType="OUTSIDE" strokeWidth="0.0" text="[NAME]">
+      <Button fx:id="previousButton" layoutX="39.0" layoutY="438.0" mnemonicParsing="false" prefHeight="76.0" prefWidth="164.0" text="Previous" />
+      <Button fx:id="nextButton" layoutX="601.0" layoutY="444.0" mnemonicParsing="false" prefHeight="70.0" prefWidth="164.0" text="Next" />
+      <Text fx:id="currentName" layoutX="337.0" layoutY="138.0" strokeType="OUTSIDE" strokeWidth="0.0" text="[NAME]">
          <font>
             <Font name="System Bold" size="33.0" />
          </font>

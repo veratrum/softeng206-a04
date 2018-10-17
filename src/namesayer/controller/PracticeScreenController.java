@@ -14,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.scene.control.Button;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import namesayer.Recording;
@@ -28,21 +29,31 @@ public class PracticeScreenController extends CustomController { // I need to do
 	@FXML
 	Text nextName;
 
+	@FXML 
+	Text currentName;
+
+	@FXML
+	Button nextButton;
+
+	@FXML
+	Button previousButton;
+
 	private String currentRecordingLocation;
-	
+
 	private BasicMediaPlayerController mediaPlayerController;
 
 	@Override
 	public void init() {
 		currentRecordingLocation = "";
-		
+
 		initMediaPlayer();
 	}
 
 	@Override
 	public void load() {
-		setPreviousAndNextNames();
 		doGenerateAudio();
+		setPreviousAndNextAndCurrentNames();
+		previousButton.setDisable(true);
 	}
 
 	// We need some counter to know how far we are through the playlist
@@ -50,10 +61,11 @@ public class PracticeScreenController extends CustomController { // I need to do
 	private boolean needToCreateAudioFile = true;
 
 
-	// Below are the event handelers to this controller class
+	// ======================= Below are the event handelers to this controller class ====================================
+
+
 	public void returnToHome() {
-		//mainListener.goMain();
-		createAudioFileForName();
+		mainListener.goMain();
 	}
 
 	private void initMediaPlayer() {
@@ -70,6 +82,14 @@ public class PracticeScreenController extends CustomController { // I need to do
 		} catch (IOException e) {
 
 		}
+	}
+
+	public void nextName() {
+
+	}
+
+	public void previousName() {
+
 	}
 
 	private void doGenerateAudio() {
@@ -91,7 +111,7 @@ public class PracticeScreenController extends CustomController { // I need to do
 			protected void done() {
 				String currentName = playlistData.get(playlistPositionCounter);
 
-				
+
 			}
 		};
 		new Thread(task).start();
@@ -177,8 +197,7 @@ public class PracticeScreenController extends CustomController { // I need to do
 		}
 	}
 
-	public void setPreviousAndNextNames() {
-
+	public void setPreviousAndNextAndCurrentNames() {
 		if (playlistPositionCounter != playlistData.size() - 1) {
 			nextName.setText(playlistData.get(playlistPositionCounter + 1).toString());
 		}
@@ -194,6 +213,8 @@ public class PracticeScreenController extends CustomController { // I need to do
 		else {
 			previousName.setText("No previous Name");
 		}
+
+		currentName.setText(playlistData.get(playlistPositionCounter).toString());
 
 	}
 }
