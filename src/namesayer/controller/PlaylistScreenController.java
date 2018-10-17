@@ -1,5 +1,7 @@
 package namesayer.controller;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +21,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.Pane;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import namesayer.Creation;
 import namesayer.ImportListener;
@@ -56,7 +59,7 @@ public class PlaylistScreenController extends CustomController implements Import
 	//=== Event handlers for the buttons on the play screen ===//
 
 	public void startPlaylist() {
-		
+
 		// Sending an error message to the user that they need to create a playlist first
 		if (getPlaylist().size() == 0 || getPlaylist() == null) {
 			Alert alert = new Alert(AlertType.ERROR);
@@ -72,7 +75,7 @@ public class PlaylistScreenController extends CustomController implements Import
 			// Passing the practice screen the playlistData
 			playlistData.addAll(getPlaylist());
 			mainListener.goPractice();
-			
+
 			// Clearing the playlist listView
 			playlist.getItems().clear();
 		}
@@ -89,16 +92,16 @@ public class PlaylistScreenController extends CustomController implements Import
 
 				// If the name is not already in the playlist - and only contains characters/spaces/hyphens then add it!
 				if( !(playlist.getItems().contains(nameToAdd)) && isNameMadeOfAcceptableCharacters(nameToAdd)) {
-					
+
 					// We need to check if the database or userDatabase has a recording for the names to be added
 					String[] nameToAddParsed = nameToAdd.split("[-\\s]"); 
-					
+
 					for (String s : nameToAddParsed) {
-						
+
 						// If there is no creation for that name then we need to have the user make one!
 						if ((creations.getCreationByName(s) == null) && (userCreations.getCreationByName(s) == null)) {
-							
-							
+
+
 							/**
 							 * INSERT DIALOG BOX ASKING THE USER TO CREATE A CREATION FOR THIS NAME
 							 * IN THE USERCREATIONS DIRECTORY HERE!!!!!!!! - make sure that the user
@@ -112,8 +115,8 @@ public class PlaylistScreenController extends CustomController implements Import
 						}
 					}
 
-					
-					
+
+
 					// Now we need to update the playlist and the text field.
 					new Thread(new Runnable() {
 						@Override public void run() {
@@ -145,7 +148,7 @@ public class PlaylistScreenController extends CustomController implements Import
 									alert.setContentText("Error the name you are trying to add is already\nin the playlist or contains illegal characters");
 
 									alert.showAndWait();
-									
+
 									// Name is invalid so we are clearing it!
 									nameToAddToPlaylist.clear();
 									nameToAddToPlaylist.setPromptText("Please enter a name");
@@ -232,13 +235,13 @@ public class PlaylistScreenController extends CustomController implements Import
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxml/ImportEntryModule.fxml"));
 			Pane importModulePane = loader.load();
-			
+
 			Scene importScene = new Scene(importModulePane, 400, 300);
-			
+
 			ImportEntryModuleController controller = loader.getController();
 			controller.setScene(importScene);
 			controller.setImportListener(this);
-			
+
 			Stage importModule = new Stage();
 			importModule.setScene(importScene);
 			importModule.show();
@@ -247,8 +250,56 @@ public class PlaylistScreenController extends CustomController implements Import
 		}
 	}
 
+	/**
+	 * This method is used to export the playlist that the user has created (in the listView)
+	 * as a text file.
+	 */
 	public void exportAPlaylist() {
 
+		// getting the playlist to export
+		ObservableList<String> playlistToExport = getPlaylist();
+		boolean exportSuccesful = false;
+
+		// Asking the user for the directory where they want to store the playlist.
+		DirectoryChooser dirChooser = new DirectoryChooser();
+		File chosenDir = dirChooser.showDialog(scene.getWindow());
+		
+		try {
+			FileWriter writer = new FileWriter(chosenDir + "/Playlist" + ".txt");
+			
+			for (int i = 0; i < playlistToExport.size(); i++) {
+				String str = playlistToExport.get(i);
+				writer.write(str);
+				
+				// This prevent creating a blank like at the end of the file
+				if(i < playlistToExport.size() - 1) {
+					writer.write("\n");
+				}
+			}
+			writer.close();
+			exportSuccesful = true;
+		}
+		catch(Exception e) {
+			Alert alert = new Alert(AlertType.ERROR);
+			DialogPane dialogPane = alert.getDialogPane();
+			dialogPane.getStylesheets().add(getClass().getResource("dialog.css").toExternalForm());
+			alert.setTitle("Export Error");
+			alert.setHeaderText("PLAYLIST EXPORT ERROR");
+			alert.setContentText("There was an error exporting your\nplaylist please try again.");
+
+			alert.showAndWait();
+		}
+		
+		if (exportSuccesful) {
+			Alert alert = new Alert(AlertType.INFORMATION);
+			DialogPane dialogPane = alert.getDialogPane();
+			dialogPane.getStylesheets().add(getClass().getResource("dialog.css").toExternalForm());
+			alert.setTitle("Export Succesful");
+			alert.setHeaderText("EXPORT SUCCESFUL");
+			alert.setContentText("Your playlist was exported succesfully!");
+
+			alert.showAndWait();
+		}
 	}
 
 	public void returnToMainScreen() {
@@ -260,10 +311,10 @@ public class PlaylistScreenController extends CustomController implements Import
 
 
 	//=== Below are the helper functions for the event handlers ===//
-	
+
 	public boolean isNameMadeOfAcceptableCharacters(String name) {
 		char[] characters = name.toCharArray();
-		
+
 		for (char c : characters) {
 			// If the character is not a letter, space or hyphen return false!
 			if( !Character.isLetter(c) && !(c == ' ') && !(c == '-') ) {
@@ -272,7 +323,7 @@ public class PlaylistScreenController extends CustomController implements Import
 		}
 		return true;
 	}
-	
+
 
 	private void updateNamesList() { // NEED TO CHECK THAT THIS WORKS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -353,15 +404,15 @@ public class PlaylistScreenController extends CustomController implements Import
 	public void importFinishedSorted(List<List<String>> names) {
 		for (List<String> list: names) {
 			String name = "";
-			
+
 			for (int i = 0; i < list.size(); i++) {
 				name += list.get(i);
-				
+
 				if (i != list.size() - 1) {
 					name += " ";
 				}
 			}
-			
+
 			if (name != "") {
 				playlist.getItems().add(name);
 			}
