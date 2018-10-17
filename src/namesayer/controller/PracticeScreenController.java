@@ -3,18 +3,24 @@ package namesayer.controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.SequenceInputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.DialogPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import namesayer.Recording;
@@ -38,14 +44,15 @@ public class PracticeScreenController extends CustomController { // I need to do
 	@FXML
 	Button previousButton;
 
-	private String currentRecordingLocation;
-
+	private File currentRecordingFile;
 	private BasicMediaPlayerController mediaPlayerController;
+	private boolean isPlaylistFinished;
+
+	// fields used for user feedback to track their progress
+	private Optional<String> userRating;
 
 	@Override
 	public void init() {
-		currentRecordingLocation = "";
-
 		initMediaPlayer();
 	}
 
@@ -58,7 +65,7 @@ public class PracticeScreenController extends CustomController { // I need to do
 
 	// We need some counter to know how far we are through the playlist
 	private int playlistPositionCounter  = 0;
-	
+
 
 
 
@@ -73,7 +80,7 @@ public class PracticeScreenController extends CustomController { // I need to do
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxml/MediaPlayerPaneBasic.fxml"));
 			Pane mediaPlayerPane = loader.load();
 
-			mediaPlayerPane.setLayoutX(173);
+			mediaPlayerPane.setLayoutX(165);
 			mediaPlayerPane.setLayoutY(146);
 
 			rootPane.getChildren().add(mediaPlayerPane);
@@ -89,28 +96,40 @@ public class PracticeScreenController extends CustomController { // I need to do
 		// We need to delete the current audio file
 		File audioToDelete = new File("Playlist/" + playlistData.get(playlistPositionCounter) + ".wav");
 		audioToDelete.delete();
-		
+
 		// We need to update the counter and generate the audio file
-		if(playlistPositionCounter != playlistData.size()) {
+		if(playlistPositionCounter != playlistData.size() - 1) {
 			playlistPositionCounter++;
 		}
-		setPreviousAndNextAndCurrentNames();
-		doGenerateAudio();
+
+		// If playlist is finished then the button should open the progress dialog box and return user to main screen.
+		if (isPlaylistFinished) {
+			askUserForRating();
+			mainListener.goMain();
+		}
+		else {
+			setPreviousAndNextAndCurrentNames();
+			doGenerateAudio();
+		}
+
+		setPreviousAndNextButtonProperties();
 
 	}
 
 	public void previousName() {
-		
+
 		// We need to delete the current audio file
 		File audioToDelete = new File("Playlist/" + playlistData.get(playlistPositionCounter) + ".wav");
 		audioToDelete.delete();
-		
+
 		// We need to update the counter and generate the audio file
 		if(playlistPositionCounter != 0) {
 			playlistPositionCounter--;
 		}
 		setPreviousAndNextAndCurrentNames();
 		doGenerateAudio();
+
+		setPreviousAndNextButtonProperties();
 	}
 
 	public void playNameFromDatabase() {
@@ -134,9 +153,14 @@ public class PracticeScreenController extends CustomController { // I need to do
 
 			@Override
 			protected void done() {
-				String currentName = playlistData.get(playlistPositionCounter);
+				Platform.runLater(new Task<Void>() {
+					@Override
+					public Void call() {
+						mediaPlayerController.setRecording(currentRecordingFile);
 
-
+						return null;
+					}
+				});
 			}
 		};
 		new Thread(task).start();
@@ -169,11 +193,15 @@ public class PracticeScreenController extends CustomController { // I need to do
 
 			// If there is only one file then just return that audio file.
 			if(parsedName.length == 1) {
+
 				File audioFile = new File("Playlist/" + currentName + ".wav");
 
 
+
+				currentRecordingFile = new File("Playlist/" + currentName + ".wav");
+
 				clip1 = AudioSystem.getAudioInputStream(new File(creations.getCreationByName(parsedName[0]).getRandomGoodRecording().getFile().toString()));
-				AudioSystem.write(clip1 ,AudioFileFormat.Type.WAVE, audioFile);
+				AudioSystem.write(clip1 ,AudioFileFormat.Type.WAVE, currentRecordingFile);
 
 			}
 			else { // Otherwise Iterating over the parsed name to create the audioFile.
@@ -197,15 +225,18 @@ public class PracticeScreenController extends CustomController { // I need to do
 					appendedFiles = new AudioInputStream(new SequenceInputStream(clip1, clip2),clip1.getFormat(),clip1.getFrameLength() + clip2.getFrameLength());
 
 					if(i == parsedName.length - 2) { // then this is the last iteration so we need to save the file.
-						File meregedRecordingFile = new File("Playlist/" + currentName + ".wav");
-						AudioSystem.write(appendedFiles,AudioFileFormat.Type.WAVE, meregedRecordingFile);
+						currentRecordingFile = new File("Playlist/" + currentName + ".wav");
+						AudioSystem.write(appendedFiles,AudioFileFormat.Type.WAVE, currentRecordingFile);
 					}
 					else { // save it as a temporary file
 						tempFile = new File("Playlist/temp.wav");
 						AudioSystem.write(appendedFiles,AudioFileFormat.Type.WAVE, tempFile);
 					}
 				}
-				tempFile.delete();
+
+				if(tempFile != null) {
+					tempFile.delete();
+				}
 			}
 		}
 		catch(Exception e) {
@@ -244,5 +275,58 @@ public class PracticeScreenController extends CustomController { // I need to do
 
 		currentName.setText(playlistData.get(playlistPositionCounter).toString());
 
+	}
+
+	/**
+	 * This method sets the properties of the next and previous button as we scroll through
+	 * the playlist. ie it sets them to be disabled/enabled and changes their text when 
+	 * needed. It also sets the value of the text field beneath the buttons to be the 
+	 * name of the next/previous names in the playlist. 
+	 */
+	public void setPreviousAndNextButtonProperties() {
+		// Now we need to set the buttons to be enabled/disabled if needed
+		if (playlistPositionCounter == playlistData.size() - 1) {
+			nextButton.setText("Finish");
+			nextName.setVisible(false);
+			isPlaylistFinished = true;
+		}
+		else {
+			nextButton.setDisable(false);
+			nextButton.setText("Next");
+			nextName.setVisible(true);
+			isPlaylistFinished = false;
+		}
+
+		if (playlistPositionCounter == 0) {
+			previousButton.setDisable(true);
+		}
+		else {
+			previousButton.setDisable(false);
+		}
+	}
+
+	/**
+	 * This method is used to get the users rating on how good they beleive their performance for the last playlist was
+	 */
+	public void askUserForRating() {
+
+		// Now we need to ask the user how they think they did in their last attempt so we can track their progress.
+		List<String> choices = new ArrayList<>();
+		choices.add("1");choices.add("2");choices.add("3");choices.add("4");choices.add("5");choices.add("6");choices.add("7");choices.add("8");choices.add("9");choices.add("10");
+		ChoiceDialog<String> dialog = new ChoiceDialog<>("1", choices);
+
+		DialogPane dialogPane = dialog.getDialogPane();
+		dialogPane.getStylesheets().add(getClass().getResource("dialog.css").toExternalForm());
+		dialog.setTitle("Rate your progress");
+		dialog.setHeaderText("How do you think you performed for your playlist?");
+		dialog.setContentText("Rating:");
+
+		// Getting the users self rating.
+		userRating = dialog.showAndWait();
+
+		// Adding the user rating to the array which stores all past user ratings - if it is present
+		if(userRating.isPresent()) {
+			progress.addRating(userRating.get());
+		}
 	}
 }

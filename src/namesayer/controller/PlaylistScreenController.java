@@ -57,8 +57,8 @@ public class PlaylistScreenController extends CustomController implements Import
 
 	public void startPlaylist() {
 		
+		// Sending an error message to the user that they need to create a playlist first
 		if (getPlaylist().size() == 0 || getPlaylist() == null) {
-			
 			Alert alert = new Alert(AlertType.ERROR);
 			DialogPane dialogPane = alert.getDialogPane();
 			dialogPane.getStylesheets().add(getClass().getResource("dialog.css").toExternalForm());
@@ -69,8 +69,12 @@ public class PlaylistScreenController extends CustomController implements Import
 			alert.showAndWait();
 		}
 		else {
+			// Passing the practice screen the playlistData
 			playlistData.addAll(getPlaylist());
 			mainListener.goPractice();
+			
+			// Clearing the playlist listView
+			playlist.getItems().clear();
 		}
 	}
 	public void addNameToPlaylist() {
@@ -83,8 +87,33 @@ public class PlaylistScreenController extends CustomController implements Import
 
 				String nameToAdd = nameToAddToPlaylist.getText();
 
-				// If the name is not already in the playlist then add it!
-				if( !(playlist.getItems().contains(nameToAdd))) {
+				// If the name is not already in the playlist - and only contains characters/spaces/hyphens then add it!
+				if( !(playlist.getItems().contains(nameToAdd)) && isNameMadeOfAcceptableCharacters(nameToAdd)) {
+					
+					// We need to check if the database or userDatabase has a recording for the names to be added
+					String[] nameToAddParsed = nameToAdd.split("[-\\s]"); 
+					
+					for (String s : nameToAddParsed) {
+						
+						// If there is no creation for that name then we need to have the user make one!
+						if ((creations.getCreationByName(s) == null) && (userCreations.getCreationByName(s) == null)) {
+							
+							
+							/**
+							 * INSERT DIALOG BOX ASKING THE USER TO CREATE A CREATION FOR THIS NAME
+							 * IN THE USERCREATIONS DIRECTORY HERE!!!!!!!! - make sure that the user
+							 * cannot exit the create a creation for this name screen/dialog box without
+							 * having made a recording otherwise this will create an error in the playlist
+							 * screen
+							 * 
+							 * make it a method so that it can be called again when we are importing from a 
+							 * text file so that we can check that the creations exist in that situation too!
+							 */
+						}
+					}
+
+					
+					
 					// Now we need to update the playlist and the text field.
 					new Thread(new Runnable() {
 						@Override public void run() {
@@ -112,11 +141,14 @@ public class PlaylistScreenController extends CustomController implements Import
 									DialogPane dialogPane = alert.getDialogPane();
 									dialogPane.getStylesheets().add(getClass().getResource("dialog.css").toExternalForm());
 									alert.setTitle("Name Error");
-									alert.setHeaderText("That name has already been added");
-									alert.setContentText("Error the name you are trying to add\nis already in the playlist");
+									alert.setHeaderText("NAME ERROR");
+									alert.setContentText("Error the name you are trying to add is already\nin the playlist or contains illegal characters");
 
 									alert.showAndWait();
-
+									
+									// Name is invalid so we are clearing it!
+									nameToAddToPlaylist.clear();
+									nameToAddToPlaylist.setPromptText("Please enter a name");
 								}
 							});
 
@@ -228,6 +260,19 @@ public class PlaylistScreenController extends CustomController implements Import
 
 
 	//=== Below are the helper functions for the event handlers ===//
+	
+	public boolean isNameMadeOfAcceptableCharacters(String name) {
+		char[] characters = name.toCharArray();
+		
+		for (char c : characters) {
+			// If the character is not a letter, space or hyphen return false!
+			if( !Character.isLetter(c) && !(c == ' ') && !(c == '-') ) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 
 	private void updateNamesList() { // NEED TO CHECK THAT THIS WORKS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
