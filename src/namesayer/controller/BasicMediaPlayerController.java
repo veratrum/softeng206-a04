@@ -102,7 +102,7 @@ public class BasicMediaPlayerController implements Initializable {
 		setButtonState(this.isPlaying);
 	}
 	
-	private void setButtonState(boolean playing) {
+	public void setButtonState(boolean playing) {
 		isPlaying = playing;
 
 		Image playImage;

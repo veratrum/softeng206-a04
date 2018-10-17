@@ -112,6 +112,7 @@ public class PracticeScreenController extends CustomController { // I need to do
 					@Override
 					public Void call() {
 						mediaPlayerController.setRecording(currentRecordingFile);
+						mediaPlayerController.setButtonState(true);
 						
 						return null;
 					}
