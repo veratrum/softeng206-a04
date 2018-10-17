@@ -1,30 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.scene.control.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<Pane stylesheets="@application.css" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="pane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.controller.PracticeScreenController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="pane" stylesheets="@application.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.controller.PracticeScreenController">
    <children>
-      <Label layoutX="302.0" layoutY="91.0" text="Practice ">
+      <Label layoutX="296.0" layoutY="28.0" text="Practice ">
          <font>
             <Font name="System Bold" size="51.0" />
          </font>
       </Label>
-      <Button layoutX="33.0" layoutY="559.0" mnemonicParsing="false" text="Back" onAction="#returnToHome"/>
+      <Button layoutX="33.0" layoutY="559.0" mnemonicParsing="false" onAction="#returnToHome" text="Back" />
       <Button layoutX="39.0" layoutY="438.0" mnemonicParsing="false" prefHeight="76.0" prefWidth="164.0" text="Previous" />
       <Button layoutX="601.0" layoutY="444.0" mnemonicParsing="false" prefHeight="70.0" prefWidth="164.0" text="Next" />
-      <Text id="currentName" layoutX="337.0" layoutY="234.0" strokeType="OUTSIDE" strokeWidth="0.0" text="[NAME]">
+      <Text id="currentName" layoutX="337.0" layoutY="138.0" strokeType="OUTSIDE" strokeWidth="0.0" text="[NAME]">
          <font>
             <Font name="System Bold" size="33.0" />
          </font>
       </Text>
-      <Button layoutX="346.0" layoutY="300.0" mnemonicParsing="false" prefHeight="61.0" prefWidth="164.0" text="Record Your Attempt" />
-      <Button layoutX="343.0" layoutY="372.0" mnemonicParsing="false" text="Listen To Your Attempt" />
-      <Button layoutX="343.0" layoutY="399.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="170.0" text="Listen To Database" onAction="#playNameFromDatabase"/>
+      <Button layoutX="316.0" layoutY="278.0" mnemonicParsing="false" prefHeight="61.0" prefWidth="164.0" text="Record Your Attempt" />
+      <Button layoutX="328.0" layoutY="347.0" mnemonicParsing="false" text="Listen To Your Attempt" />
       <Text fx:id="previousName" layoutX="44.0" layoutY="535.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Previous Name" />
       <Text fx:id="nextName" layoutX="645.0" layoutY="535.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Next Name" />
    </children>

@@ -24,7 +24,7 @@
       <Label layoutX="197.0" layoutY="366.0" text="WARNING: This will clear your current Names and Recordings. Consider saving first!" textFill="#bb0000" />
       <Button layoutX="34.0" layoutY="360.0" mnemonicParsing="false" onAction="#clearDatabase" prefHeight="27.0" prefWidth="149.0" text="Clear database" />
       <Label layoutX="197.0" layoutY="420.0" text="WARNING: This will overwrite your current Names and Recordings. Consider saving first!" textFill="#bb0000" />
-      <Button layoutX="34.0" layoutY="414.0" mnemonicParsing="false" onAction="#importDatabase" prefHeight="27.0" prefWidth="149.0" text="Import database" />
+      <Button layoutX="34.0" layoutY="414.0" mnemonicParsing="false" onAction="#importDatabase" prefHeight="27.0" prefWidth="149.0" text="Import text file" />
       <Button layoutX="18.0" layoutY="561.0" mnemonicParsing="false" onAction="#goMain" text="Back" />
    </children>
 </Pane>

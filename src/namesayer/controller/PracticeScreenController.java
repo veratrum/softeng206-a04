@@ -1,6 +1,7 @@
 package namesayer.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.SequenceInputStream;
 
 import javax.sound.sampled.AudioFileFormat;
@@ -10,7 +11,11 @@ import javax.sound.sampled.Clip;
 
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import namesayer.Recording;
 
 
@@ -23,9 +28,21 @@ public class PracticeScreenController extends CustomController { // I need to do
 	@FXML
 	Text nextName;
 
+	private String currentRecordingLocation;
+	
+	private BasicMediaPlayerController mediaPlayerController;
+
+	@Override
+	public void init() {
+		currentRecordingLocation = "";
+		
+		initMediaPlayer();
+	}
+
 	@Override
 	public void load() {
 		setPreviousAndNextNames();
+		doGenerateAudio();
 	}
 
 	// We need some counter to know how far we are through the playlist
@@ -39,9 +56,23 @@ public class PracticeScreenController extends CustomController { // I need to do
 		createAudioFileForName();
 	}
 
+	private void initMediaPlayer() {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxml/MediaPlayerPaneBasic.fxml"));
+			Pane mediaPlayerPane = loader.load();
 
-	public void playNameFromDatabase() {
+			mediaPlayerPane.setLayoutX(173);
+			mediaPlayerPane.setLayoutY(146);
 
+			rootPane.getChildren().add(mediaPlayerPane);
+
+			mediaPlayerController = loader.getController();
+		} catch (IOException e) {
+
+		}
+	}
+
+	private void doGenerateAudio() {
 		// Creating a background task to create the audioFile for the name and play it
 		Task<Void> task = new Task<Void>() {
 			@Override
@@ -53,32 +84,17 @@ public class PracticeScreenController extends CustomController { // I need to do
 					needToCreateAudioFile = false;
 				}
 
+				return null;
+			}
+
+			@Override
+			protected void done() {
 				String currentName = playlistData.get(playlistPositionCounter);
 
-				PlayAudio(currentName);
-
-				return null;
+				
 			}
 		};
 		new Thread(task).start();
-	}
-
-
-	// Below are the helper functions to this controller class
-
-	public void PlayAudio(String currentName) {
-
-		File recordingToPlay = new File("Playlist/" + currentName + ".wav");
-		Clip clip;
-		try {
-			clip = AudioSystem.getClip();
-			clip.open(AudioSystem.getAudioInputStream(recordingToPlay));
-			clip.start();
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-
 	}
 
 	public void createAudioFileForName() {
@@ -111,10 +127,10 @@ public class PracticeScreenController extends CustomController { // I need to do
 				File audioFile = new File("Playlist/" + currentName + ".wav");
 				clip1 = AudioSystem.getAudioInputStream(new File(creations.getCreationByName(parsedName[0]).getRandomGoodRecording().getFile().toString()));
 				AudioSystem.write(clip1 ,AudioFileFormat.Type.WAVE, audioFile);
-				
+
 			}
 			else { // Otherwise Iterating over the parsed name to create the audioFile.
-				
+
 				for (int i = 0; i < parsedName.length - 1; i++) {
 
 					if (i == 0) { // first iteration so we need to get two recordings.
@@ -162,7 +178,7 @@ public class PracticeScreenController extends CustomController { // I need to do
 	}
 
 	public void setPreviousAndNextNames() {
-		
+
 		if (playlistPositionCounter != playlistData.size() - 1) {
 			nextName.setText(playlistData.get(playlistPositionCounter + 1).toString());
 		}
@@ -178,6 +194,6 @@ public class PracticeScreenController extends CustomController { // I need to do
 		else {
 			previousName.setText("No previous Name");
 		}
-		
+
 	}
 }
