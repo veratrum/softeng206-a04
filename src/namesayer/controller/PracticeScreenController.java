@@ -1,6 +1,7 @@
 package namesayer.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.SequenceInputStream;
 
 import javax.sound.sampled.AudioFileFormat;
@@ -10,8 +11,12 @@ import javax.sound.sampled.Clip;
 
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import javafx.scene.control.Button;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import namesayer.Recording;
 
 
@@ -33,79 +38,108 @@ public class PracticeScreenController extends CustomController { // I need to do
 	@FXML
 	Button previousButton;
 
+	private String currentRecordingLocation;
+
+	private BasicMediaPlayerController mediaPlayerController;
+
+	@Override
+	public void init() {
+		currentRecordingLocation = "";
+
+		initMediaPlayer();
+	}
+
 	@Override
 	public void load() {
+		doGenerateAudio();
 		setPreviousAndNextAndCurrentNames();
 		previousButton.setDisable(true);
 	}
 
 	// We need some counter to know how far we are through the playlist
 	private int playlistPositionCounter  = 0;
-	private boolean needToCreateAudioFile = true;
+	
+
 
 
 	// ======================= Below are the event handlers to this controller class ====================================
-
 
 	public void returnToHome() {
 		mainListener.goMain();
 	}
 
+	private void initMediaPlayer() {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxml/MediaPlayerPaneBasic.fxml"));
+			Pane mediaPlayerPane = loader.load();
+
+			mediaPlayerPane.setLayoutX(173);
+			mediaPlayerPane.setLayoutY(146);
+
+			rootPane.getChildren().add(mediaPlayerPane);
+
+			mediaPlayerController = loader.getController();
+		} catch (IOException e) {
+
+		}
+	}
+
 	public void nextName() {
+
+		// We need to delete the current audio file
+		File audioToDelete = new File("Playlist/" + playlistData.get(playlistPositionCounter) + ".wav");
+		audioToDelete.delete();
+		
+		// We need to update the counter and generate the audio file
 		if(playlistPositionCounter != playlistData.size()) {
 			playlistPositionCounter++;
 		}
-		
-		
-		
+		setPreviousAndNextAndCurrentNames();
+		doGenerateAudio();
+
 	}
 
 	public void previousName() {
+		
+		// We need to delete the current audio file
+		File audioToDelete = new File("Playlist/" + playlistData.get(playlistPositionCounter) + ".wav");
+		audioToDelete.delete();
+		
+		// We need to update the counter and generate the audio file
 		if(playlistPositionCounter != 0) {
 			playlistPositionCounter--;
 		}
-		
+		setPreviousAndNextAndCurrentNames();
+		doGenerateAudio();
 	}
 
 	public void playNameFromDatabase() {
 
+
+	}
+
+
+
+
+	private void doGenerateAudio() {
 		// Creating a background task to create the audioFile for the name and play it
 		Task<Void> task = new Task<Void>() {
 			@Override
 			protected Void call() throws Exception {
 
-				// Creating the audio File
-				if (needToCreateAudioFile) {
-					createAudioFileForName(); // DONT need to do this every time !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!+++++++++++++++++++++++++++++++++++!!!!!!!!!!!!!!!!
-					needToCreateAudioFile = false;
-				}
-
-				String currentName = playlistData.get(playlistPositionCounter);
-
-				PlayAudio(currentName);
+				createAudioFileForName(); // DONT need to do this every time !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!+++++++++++++++++++++++++++++++++++!!!!!!!!!!!!!!!!
 
 				return null;
 			}
+
+			@Override
+			protected void done() {
+				String currentName = playlistData.get(playlistPositionCounter);
+
+
+			}
 		};
 		new Thread(task).start();
-	}
-
-
-	// =====================================  Below are the helper functions to this controller class =======================================================
-
-	public void PlayAudio(String currentName) {
-
-		File recordingToPlay = new File("Playlist/" + currentName + ".wav");
-		Clip clip;
-		try {
-			clip = AudioSystem.getClip();
-			clip.open(AudioSystem.getAudioInputStream(recordingToPlay));
-			clip.start();
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-
 	}
 
 	public void createAudioFileForName() {
@@ -136,11 +170,8 @@ public class PracticeScreenController extends CustomController { // I need to do
 			// If there is only one file then just return that audio file.
 			if(parsedName.length == 1) {
 				File audioFile = new File("Playlist/" + currentName + ".wav");
-				
-				if () {
-					
-				}
-				
+
+
 				clip1 = AudioSystem.getAudioInputStream(new File(creations.getCreationByName(parsedName[0]).getRandomGoodRecording().getFile().toString()));
 				AudioSystem.write(clip1 ,AudioFileFormat.Type.WAVE, audioFile);
 
