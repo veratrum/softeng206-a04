@@ -1,6 +1,9 @@
 package namesayer.controller;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,9 +22,11 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.Pane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import namesayer.Creation;
 import namesayer.ImportListener;
+import namesayer.Utils;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
@@ -216,7 +221,38 @@ public class PlaylistScreenController extends CustomController implements Import
 	}
 
 	public void exportAPlaylist() {
+		/* allow the user to choose where to save the file
+		modified from https://docs.oracle.com/javafx/2/ui_controls/file-chooser.htm */
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Save Playlist");
+		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 
+		fileChooser.setInitialFileName("playlist_" + Utils.getDateFilenameFragment() + ".txt");
+
+		File saveLocation = fileChooser.showSaveDialog(scene.getWindow());
+
+		// user closed save dialog
+		if (saveLocation == null) {
+			return;
+		}
+		
+		// generate string representation of playlist
+		String playlistString = "";
+		for (String name: getPlaylist()) {
+			playlistString += name;
+			playlistString += System.lineSeparator();
+		}
+		
+		// https://stackoverflow.com/a/1053475
+		try {
+			PrintWriter out = new PrintWriter(saveLocation);
+
+			out.println(playlistString);
+			
+			out.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void returnToMainScreen() {

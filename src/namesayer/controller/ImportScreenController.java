@@ -261,10 +261,7 @@ public class ImportScreenController extends CustomController implements ImportLi
 	}
 
 	private String generateExportZipFilename() {
-		LocalDateTime now = LocalDateTime.now();
-
-		return "namesayer_export_" + now.getYear() + "-" + now.getMonthValue() + "-" + now.getDayOfMonth() + "-"
-		+ Utils.padLeft(now.getHour() + "", 2, "0") + Utils.padLeft(now.getMinute() + "", 2, "0") + ".zip";
+		return "namesayer_export_" + Utils.getDateFilenameFragment() + ".zip";
 	}
 
 	@Override

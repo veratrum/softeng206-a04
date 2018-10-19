@@ -6,6 +6,7 @@ import java.lang.reflect.Array;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,5 +70,12 @@ public class Utils {
 	public static String readFile(File file, Charset encoding) throws IOException {
 		byte[] encoded = Files.readAllBytes(file.toPath());
 		return new String(encoded, encoding);
+	}
+	
+	public static String getDateFilenameFragment() {
+		LocalDateTime now = LocalDateTime.now();
+		
+		return now.getYear() + "-" + now.getMonthValue() + "-" + now.getDayOfMonth() + "-"
+				+ padLeft(now.getHour() + "", 2, "0") + padLeft(now.getMinute() + "", 2, "0");
 	}
 }
