@@ -3,6 +3,7 @@ package namesayer.controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.SequenceInputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +12,8 @@ import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -23,11 +26,12 @@ import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.DialogPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import namesayer.Creation;
+import namesayer.DatabaseLocation;
 import namesayer.Recording;
+import namesayer.RecordingListener;
 
-
-
-public class PracticeScreenController extends CustomController { // I need to do some checking to see that the name exists in the database!!!!!!!!!!! - or else ask the user to add it!!!!
+public class PracticeScreenController extends CustomController implements RecordingListener { // I need to do some checking to see that the name exists in the database!!!!!!!!!!! - or else ask the user to add it!!!!
 
 	@FXML
 	Text previousName;
@@ -44,9 +48,15 @@ public class PracticeScreenController extends CustomController { // I need to do
 	@FXML
 	Button previousButton;
 
+	@FXML
+	Button playAttempt;
+
 	private File currentRecordingFile;
 	private BasicMediaPlayerController mediaPlayerController;
 	private boolean isPlaylistFinished;
+
+	private RecordingModuleController recordingController;
+	private File lastRecording;
 
 	// fields used for user feedback to track their progress
 	private Optional<String> userRating;
@@ -61,6 +71,7 @@ public class PracticeScreenController extends CustomController { // I need to do
 		doGenerateAudio();
 		setPreviousAndNextAndCurrentNames();
 		previousButton.setDisable(true);
+		playAttempt.setDisable(true);
 	}
 
 	// We need some counter to know how far we are through the playlist
@@ -117,7 +128,6 @@ public class PracticeScreenController extends CustomController { // I need to do
 	}
 
 	public void previousName() {
-
 		// We need to delete the current audio file
 		File audioToDelete = new File("Playlist/" + playlistData.get(playlistPositionCounter) + ".wav");
 		audioToDelete.delete();
@@ -132,13 +142,49 @@ public class PracticeScreenController extends CustomController { // I need to do
 		setPreviousAndNextButtonProperties();
 	}
 
-	public void playNameFromDatabase() {
+	public void recordAttempt() {
+		try {
+			Stage recordingStage = new Stage();
 
+			File src = new File("src");
+			File namesayer = new File(src, "namesayer");
+			File fxml = new File(namesayer, "fxml");
+			File loaderPath = new File(fxml, "RecordingPane.fxml");
+			URL path = loaderPath.toURI().toURL();
+			FXMLLoader loader = new FXMLLoader(path);
+			/*FXMLLoader loader = new FXMLLoader(getClass().getResource("media"
+					+ File.separator + "RecordingPane.fxml"));*/
+			Pane recordingPane = loader.load();
 
+			Scene recordingScene = new Scene(recordingPane, 400, 300);
+
+			recordingController = loader.getController();
+			recordingController.init();
+			// use dummy creation to pass name
+			recordingController.setCreation(new Creation(currentRecordingFile.getName().replaceFirst("[.][^.]+$", "")));
+			recordingController.setRecordingListener(this);
+			recordingController.setSaveLocation(DatabaseLocation.TEMP);
+
+			recordingStage.setScene(recordingScene);
+			recordingStage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
-
-
+	public void listenAttempt() {
+		try {
+			Clip clip = AudioSystem.getClip();
+			clip.open(AudioSystem.getAudioInputStream(lastRecording));
+			clip.start();
+		} catch (LineUnavailableException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (UnsupportedAudioFileException e) {
+			e.printStackTrace();
+		}
+	}
 
 	private void doGenerateAudio() {
 		// Creating a background task to create the audioFile for the name and play it
@@ -194,11 +240,6 @@ public class PracticeScreenController extends CustomController { // I need to do
 
 			// If there is only one file then just return that audio file.
 			if(parsedName.length == 1) {
-
-				File audioFile = new File("Playlist/" + currentName + ".wav");
-
-
-
 				currentRecordingFile = new File("Playlist/" + currentName + ".wav");
 
 				clip1 = AudioSystem.getAudioInputStream(new File(creations.getCreationByName(parsedName[0]).getRandomGoodRecording().getFile().toString()));
@@ -304,6 +345,8 @@ public class PracticeScreenController extends CustomController { // I need to do
 		else {
 			previousButton.setDisable(false);
 		}
+		
+		playAttempt.setDisable(true);
 	}
 
 	/**
@@ -329,5 +372,12 @@ public class PracticeScreenController extends CustomController { // I need to do
 		if(userRating.isPresent()) {
 			progress.addRating(userRating.get());
 		}
+	}
+
+	@Override
+	public void recordingFinished(File recording, Creation creation, DatabaseLocation location) {
+		lastRecording = recording;
+
+		playAttempt.setDisable(false);
 	}
 }

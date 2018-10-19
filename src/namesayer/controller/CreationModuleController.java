@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import namesayer.Creation;
 import namesayer.CreationListener;
 import namesayer.Creations;
+import namesayer.DatabaseLocation;
 
 public class CreationModuleController extends CustomController implements Initializable {
 
@@ -28,15 +29,15 @@ public class CreationModuleController extends CustomController implements Initia
 	private Label requirements3;
 	@FXML
 	private Label requirements4;
-	
+
 	private CreationListener creationListener;
-	private boolean isDatabaseView;
-	
+	private DatabaseLocation databaseLocation;
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		
+
 	}
-	
+
 	public void init() {
 		requirements1.setVisible(false);
 		requirements2.setVisible(false);
@@ -44,25 +45,37 @@ public class CreationModuleController extends CustomController implements Initia
 		requirements4.setVisible(false);
 		newRecordingCheckBox.setSelected(true);
 	}
-	
+
 	public void setCreationListener(CreationListener listener) {
 		this.creationListener = listener;
 	}
-	
-	public void setIsDatabaseView(boolean isDatabaseView) {
-		this.isDatabaseView = isDatabaseView;
+
+	public void setDatabaseLocation(DatabaseLocation databaseLocation) {
+		this.databaseLocation = databaseLocation;
 	}
 	
+	public void setDefaultText(String defaultText) {
+		nameField.setText(defaultText);
+	}
+
 	public void okClicked() {
 		String name = nameField.getText();
 		boolean validName = Creations.isValidName(name);
-		
-		// it is impossible to create a new creation in the datbase but in case we changed it later
-		boolean nameExists = creations.creationExists(name);
-		if (!isDatabaseView) {
-			userCreations.creationExists(name);
+
+		// it is impossible to create a new creation in the database but in case we changed it later
+		boolean nameExists;
+		switch (databaseLocation) {
+		case DATABASE:
+			nameExists = creations.creationExists(name);
+			break;
+		case USER_DATABASE:
+			nameExists = userCreations.creationExists(name);
+			break;
+		default:
+			nameExists = creations.creationExists(name);
+			break;
 		}
-		
+
 		if (!validName) {
 			requirements1.setVisible(true);
 			requirements2.setVisible(true);
@@ -75,19 +88,19 @@ public class CreationModuleController extends CustomController implements Initia
 			requirements4.setVisible(true);
 		} else {
 			boolean doNewRecording = newRecordingCheckBox.isSelected();
-			
+
 			Creation newCreation = new Creation(name);
-			
-			creationListener.creationFinished(newCreation, doNewRecording, isDatabaseView);
-			
+
+			creationListener.creationFinished(newCreation, doNewRecording, databaseLocation);
+
 			closeWindow();
 		}
 	}
-	
+
 	public void cancelClicked() {
 		closeWindow();
 	}
-	
+
 	private void closeWindow() {
 		// adapted from https://stackoverflow.com/questions/13567019/close-fxml-window-by-code-javafx
 		Platform.runLater(new Runnable() {
@@ -98,5 +111,5 @@ public class CreationModuleController extends CustomController implements Initia
 			}
 		});
 	}
-	
+
 }

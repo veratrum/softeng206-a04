@@ -26,9 +26,14 @@ import javafx.stage.Stage;
 import namesayer.Creation;
 import namesayer.CreationListener;
 import namesayer.Creations;
+import namesayer.DatabaseLocation;
 import namesayer.Recording;
 import namesayer.RecordingListener;
 
+/**
+ * Allows the user to view, play and modify (user database only) Recording and Name entries
+ * in the database and user recordings.
+ */
 public class RecordScreenController extends CustomController implements CreationListener, RecordingListener {
 
 	@FXML
@@ -57,12 +62,11 @@ public class RecordScreenController extends CustomController implements Creation
 	private RecordingModuleController recordingController;
 	private CreationModuleController creationController;
 
-	// represents whether the user is viewing the creations or userCreations
-	private boolean isDatabaseView;
+	private DatabaseLocation databaseLocation;
 
 	@Override
 	public void init() {
-		isDatabaseView = true;
+		databaseLocation = DatabaseLocation.DATABASE;
 
 		updateCreationList();
 		updateRecordingList();
@@ -90,10 +94,16 @@ public class RecordScreenController extends CustomController implements Creation
 
 	private void updateCreationList() {
 		Creations whichCreations;
-		if (isDatabaseView) {
+		switch(databaseLocation) {
+		case DATABASE:
 			whichCreations = creations;
-		} else {
+			break;
+		case USER_DATABASE:
 			whichCreations = userCreations;
+			break;
+		default:
+			whichCreations = creations;
+			break;
 		}
 
 		ObservableList<Creation> creationDataList = FXCollections.observableArrayList(whichCreations.getCreations());
@@ -184,7 +194,7 @@ public class RecordScreenController extends CustomController implements Creation
 			/*FXMLLoader loader = new FXMLLoader(getClass().getResource("media"
 					+ File.separator + "CreationPane.fxml"));*/
 			Pane creationPane = loader.load();
-			
+
 			creationPane.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
 			Scene creationScene = new Scene(creationPane, 400, 300);
@@ -194,7 +204,7 @@ public class RecordScreenController extends CustomController implements Creation
 			creationController.setCreations(creations);
 			creationController.setUserCreations(userCreations);
 			creationController.setCreationListener(this);
-			creationController.setIsDatabaseView(isDatabaseView);
+			creationController.setDatabaseLocation(databaseLocation);
 
 			creationStage.setScene(creationScene);
 			creationStage.show();
@@ -225,10 +235,15 @@ public class RecordScreenController extends CustomController implements Creation
 
 				@Override
 				protected Void call() throws Exception {
-					if (isDatabaseView) {
+					switch (databaseLocation) {
+					case DATABASE:
 						creations.deleteCreation(selectedCreation);
-					} else {
+						break;
+					case USER_DATABASE:
 						userCreations.deleteCreation(selectedCreation);
+						break;
+					default:
+						break;
 					}
 
 					selectedCreation.delete();
@@ -288,7 +303,7 @@ public class RecordScreenController extends CustomController implements Creation
 			recordingController.setUserCreations(userCreations);
 			recordingController.setCreation(creation);
 			recordingController.setRecordingListener(this);
-			recordingController.setIsDatabaseView(isDatabaseView);
+			recordingController.setSaveLocation(databaseLocation);
 
 			recordingStage.setScene(recordingScene);
 			recordingStage.show();
@@ -323,10 +338,15 @@ public class RecordScreenController extends CustomController implements Creation
 					selectedRecording.delete();
 					selectedRecording.removeSelf();
 
-					if (isDatabaseView) {
+					switch (databaseLocation) {
+					case DATABASE:
 						creations.saveState();
-					} else {
+						break;
+					case USER_DATABASE:
 						userCreations.saveState();
+						break;
+					default:
+						break;
 					}
 
 					return null;
@@ -367,15 +387,20 @@ public class RecordScreenController extends CustomController implements Creation
 	}
 
 	@Override
-	public void recordingFinished(File recordingFile, Creation creation, boolean isDatabaseView) {
+	public void recordingFinished(File recordingFile, Creation creation, DatabaseLocation location) {
 		Recording newRecording = new Recording(creation, recordingFile);
 
 		creation.addRecording(newRecording);
 
-		if (isDatabaseView) {
+		switch (databaseLocation) {
+		case DATABASE:
 			creations.saveState();
-		} else {
+			break;
+		case USER_DATABASE:
 			userCreations.saveState();
+			break;
+		default:
+			break;
 		}
 
 		Platform.runLater(new Runnable() {
@@ -388,11 +413,16 @@ public class RecordScreenController extends CustomController implements Creation
 	}
 
 	@Override
-	public void creationFinished(Creation creation, boolean newRecording, boolean isDatabaseView) {
-		if (isDatabaseView) {
+	public void creationFinished(Creation creation, boolean newRecording, DatabaseLocation location) {
+		switch (databaseLocation) {
+		case DATABASE:
 			creations.addCreation(creation);
-		} else {
+			break;
+		case USER_DATABASE:
 			userCreations.addCreation(creation);
+			break;
+		default:
+			break;
 		}
 
 		Platform.runLater(new Runnable() {
@@ -410,7 +440,16 @@ public class RecordScreenController extends CustomController implements Creation
 	}
 
 	public void swapLists() {
-		isDatabaseView = !isDatabaseView;
+		switch (databaseLocation) {
+		case DATABASE:
+			databaseLocation = DatabaseLocation.USER_DATABASE;
+			break;
+		case USER_DATABASE:
+			databaseLocation = DatabaseLocation.DATABASE;
+			break;
+		default:
+			break;
+		}
 
 		selectedRecording = null;
 		selectedCreation = null;
@@ -419,20 +458,25 @@ public class RecordScreenController extends CustomController implements Creation
 	}
 
 	private void updateWhichList() {
-		if (isDatabaseView) {
+		switch (databaseLocation) {
+		case DATABASE:
 			whichViewLabel.setText("Database Recordings Manager");
 			swapListButton.setText("Swap to User Recordings");
 			newNameButton.setDisable(true);
 			deleteNameButton.setDisable(true);
 			newRecordingButton.setDisable(true);
 			deleteRecordingButton.setDisable(true);
-		} else {
+			break;
+		case USER_DATABASE:
 			whichViewLabel.setText("User Recordings Manager");
 			swapListButton.setText("Swap to Database Recordings");
 			newNameButton.setDisable(false);
 			deleteNameButton.setDisable(false);
 			newRecordingButton.setDisable(false);
 			deleteRecordingButton.setDisable(false);
+			break;
+		default:
+			break;
 		}
 
 		updateCreationList();

@@ -77,11 +77,13 @@ public class ImportEntryModuleController extends CustomController {
 			
 			sortedNamesFinal.add(newlineFinal);
 		}
-
-		importListener.importFinishedSorted(sortedNamesFinal);
-		importListener.importFinished(unsortedNamesFinal);
 		
-		closeWindow();
+		if (importListener.checkNamesBeforeSubmit(unsortedNamesFinal)) {
+			importListener.importFinishedSorted(sortedNamesFinal);
+			importListener.importFinished(unsortedNamesFinal);
+			
+			closeWindow();
+		}
 	}
 	
 	public void cancelClicked() {

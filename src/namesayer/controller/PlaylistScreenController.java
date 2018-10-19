@@ -3,8 +3,10 @@ package namesayer.controller;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -17,6 +19,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
@@ -25,11 +28,15 @@ import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import namesayer.Creation;
+import namesayer.CreationListener;
+import namesayer.DatabaseLocation;
 import namesayer.ImportListener;
+import namesayer.Recording;
+import namesayer.RecordingListener;
 import namesayer.Utils;
 
 
-public class PlaylistScreenController extends CustomController implements ImportListener {
+public class PlaylistScreenController extends CustomController implements ImportListener, CreationListener, RecordingListener {
 
 	// Declaring the fields used in the controller
 	@FXML
@@ -47,6 +54,8 @@ public class PlaylistScreenController extends CustomController implements Import
 	private ObservableList<Creation> namesListData;
 	private Creation selectedName;
 
+	private CreationModuleController creationController;
+	private RecordingModuleController recordingController;
 
 	@Override
 	public void init() {
@@ -367,7 +376,7 @@ public class PlaylistScreenController extends CustomController implements Import
 
 	public void addListenerToSearchTextField() {
 		nameToSearchFor.textProperty().addListener(new ChangeListener<String>() {
-			public void changed(ObservableValue observable, String oldVal, String newVal) {
+			public void changed(ObservableValue<? extends String> observable, String oldVal, String newVal) {
 
 				// Checking if we should restore the names list to original - or search for newValue
 				if (newVal.equals("")) {
@@ -425,6 +434,112 @@ public class PlaylistScreenController extends CustomController implements Import
 				playlist.getItems().add(name);
 			}
 		}
+	}
+
+	@Override
+	public boolean checkNamesBeforeSubmit(List<String> names) {
+		for (String name: names) {
+			// we cannot add a non-existent name to the database
+			if (!creations.creationExists(name) && !userCreations.creationExists(name)) {
+				// ask the user if they would like to create the first non-existent name
+				Alert alert = new Alert(AlertType.CONFIRMATION);
+				alert.setTitle("Name not found");
+				alert.setHeaderText("Name " + name + " was not found in the database or user database.");
+				alert.setContentText("Would you like to add it now?");
+
+				Optional<ButtonType> result = alert.showAndWait();
+				if (result.get() == ButtonType.OK) {
+					// open a new window allowing the user to add a new name
+
+					try {
+						Stage creationStage = new Stage();
+
+						File src = new File("src");
+						File namesayer = new File(src, "namesayer");
+						File fxml = new File(namesayer, "fxml");
+						File loaderPath = new File(fxml, "CreationPane.fxml");
+						URL path = loaderPath.toURI().toURL();
+						FXMLLoader loader = new FXMLLoader(path);
+						Pane creationPane = loader.load();
+
+						creationPane.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+
+						Scene creationScene = new Scene(creationPane, 400, 300);
+
+						creationController = loader.getController();
+						creationController.init();
+						creationController.setCreations(creations);
+						creationController.setUserCreations(userCreations);
+						creationController.setCreationListener(this);
+						creationController.setDatabaseLocation(DatabaseLocation.USER_DATABASE);
+						creationController.setDefaultText(name);
+
+						creationStage.setScene(creationScene);
+						creationStage.show();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	private void doNewRecording(Creation creation) {
+		try {
+			Stage recordingStage = new Stage();
+
+			File src = new File("src");
+			File namesayer = new File(src, "namesayer");
+			File fxml = new File(namesayer, "fxml");
+			File loaderPath = new File(fxml, "RecordingPane.fxml");
+			URL path = loaderPath.toURI().toURL();
+			FXMLLoader loader = new FXMLLoader(path);
+			Pane recordingPane = loader.load();
+
+			Scene recordingScene = new Scene(recordingPane, 400, 300);
+
+			recordingController = loader.getController();
+			recordingController.init();
+			recordingController.setCreations(creations);
+			recordingController.setUserCreations(userCreations);
+			recordingController.setCreation(creation);
+			recordingController.setRecordingListener(this);
+			recordingController.setSaveLocation(DatabaseLocation.USER_DATABASE);
+
+			recordingStage.setScene(recordingScene);
+			recordingStage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * User finished creating a new creation that was not on a playlist they tried to import.
+	 */
+	@Override
+	public void creationFinished(Creation creation, boolean newRecording, DatabaseLocation location) {
+		userCreations.addCreation(creation);
+		
+		if (newRecording) {
+			doNewRecording(creation);
+		}
+	}
+
+	/**
+	 * User finished creating a new recording for the new creation that was not on a
+	 * playlist they tried to import.
+	 */
+	@Override
+	public void recordingFinished(File recordingFile, Creation creation, DatabaseLocation location) {
+		Recording newRecording = new Recording(creation, recordingFile);
+
+		creation.addRecording(newRecording);
+		
+		userCreations.saveState();
 	}
 
 }

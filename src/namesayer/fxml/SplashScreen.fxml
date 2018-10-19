@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.controller.SplashScreenController">
+   <children>
+      <Label alignment="CENTER" prefHeight="600.0" prefWidth="800.0" text="NameSayer™">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Label>
+      <Label layoutX="255.0" layoutY="505.0" text="Note that the first execution may take several seconds." />
+      <Label layoutX="362.0" layoutY="327.0" text="Version 1.0.24" />
+   </children>
+</Pane>

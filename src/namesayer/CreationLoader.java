@@ -26,14 +26,14 @@ public class CreationLoader {
 	private Creations creations;
 	private File userdata;
 	private File metadata;
-	
+
 	public CreationLoader(Creations creations, String directory, String xmlFile) {
 		this.creations = creations;
 
 		this.userdata = new File(directory);
 		this.metadata = new File(userdata, xmlFile);
 	}
-	
+
 	/**
 	 * Loads creation names, recording file paths, and recording quality,
 	 * that was saved previously as XML.
@@ -48,7 +48,7 @@ public class CreationLoader {
 		if (!userdata.exists()) {
 			userdata.mkdir();
 		}
-		
+
 		if (!metadata.exists()) {
 			firstExecution();
 		} else {
@@ -59,33 +59,33 @@ public class CreationLoader {
 				DocumentBuilder builder = factory.newDocumentBuilder();
 				Document document = builder.parse(metadata);
 				document.getDocumentElement().normalize();
-				
+
 				NodeList creationNodes = document.getElementsByTagName("creation");
-				
+
 				for (int i = 0; i < creationNodes.getLength(); i++) {
 					Node creationNode = creationNodes.item(i);
 					Element creationElement = (Element) creationNode;
-					
+
 					String creationName = creationElement.getAttribute("name");
-					
+
 					NodeList recordingNodes = creationElement.getElementsByTagName("recording");
-					
+
 					Creation creation = new Creation(creationName);
-					
+
 					for (int j = 0;j < recordingNodes.getLength(); j++) {
 						Node recordingNode = recordingNodes.item(j);
 						Element recordingElement = (Element) recordingNode;
-						
+
 						String recordingPath = recordingElement.getTextContent();
 						File recordingFile = new File(userdata, recordingPath);
-						
+
 						String isBadString = recordingElement.getAttribute("bad");
 						boolean isBad = isBadString.equals("y");
-						
+
 						Recording recording = new Recording(creation, recordingFile, isBad);
 						creation.addRecording(recording);
 					}
-					
+
 					creations.addCreationWithoutSaving(creation);
 				}
 			} catch (ParserConfigurationException e) {
@@ -114,18 +114,26 @@ public class CreationLoader {
 		if (wavs != null) {
 			for (File wav: wavs) {
 				String filename = wav.getName();
-				
+
 				// find the extension of a file and make sure it is .wav
 				String[] extensionFragments = filename.split("\\.");
 				if (extensionFragments.length > 0 &&
 						extensionFragments[extensionFragments.length - 1].equals("wav")) {
+					trimModulateAudio(wav);
+					
 					// find the proper name of the recording, stripping out unnecessary parts
 					String[] nameFragments = extensionFragments[0].split("_");
 					String properName = nameFragments[nameFragments.length - 1];
-					
+
+					// remove " (2)" from end of some recordings
+					if (properName.indexOf("(") != -1) {
+						String[] bracketFragments = properName.split("\\(");
+						properName = bracketFragments[0].substring(0, bracketFragments[0].length() - 1);
+					}
+
 					// capitalise first letter (https://stackoverflow.com/a/3904607)
 					properName = properName.substring(0, 1).toUpperCase() + properName.substring(1);
-					
+
 					// if a creation with that name already exists, add the recording to it
 					if (creations.creationExists(properName)) {
 						Recording newRecording = new Recording(creations.getCreationByName(properName), wav);
@@ -135,17 +143,17 @@ public class CreationLoader {
 						Creation newCreation = new Creation(properName);
 						Recording newRecording = new Recording(newCreation, wav);
 						newCreation.addRecording(newRecording);
-						
+
 						creations.addCreationWithoutSaving(newCreation);
 					}
 				}
 			}
 		}
-		
+
 		// generate first metadata.xml with the new creations
 		saveMetadata();
 	}
-	
+
 	/**
 	 * Saves data representing which recordings belong to which creation,
 	 * which recordings are best, and which are low quality.
@@ -160,31 +168,31 @@ public class CreationLoader {
 
 			Element rootElement = document.createElement("creations");
 			document.appendChild(rootElement);
-			
+
 			for (Creation creation: creations.getCreations()) {
 				Element creationElement = document.createElement("creation");
-				
+
 				Attr nameAttr = document.createAttribute("name");
 				nameAttr.setValue(creation.getName());
 				creationElement.setAttributeNode(nameAttr);
-				
+
 				for (int i = 0; i < creation.getRecordings().size(); i++) {
 					Recording recording = creation.getRecordings().get(i);
-					
+
 					Element recordingElement = document.createElement("recording");
-					
+
 					Attr isBadAttr = document.createAttribute("bad");
 					isBadAttr.setValue(recording.isBad() ? "y" : "n");
 					recordingElement.setAttributeNode(isBadAttr);
-					
+
 					recordingElement.appendChild(document.createTextNode(recording.getFile().getName()));
-					
+
 					creationElement.appendChild(recordingElement);
 				}
-				
+
 				rootElement.appendChild(creationElement);
 			}
-			
+
 			// generate xml and write it to disk
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
@@ -196,10 +204,10 @@ public class CreationLoader {
 		} catch (TransformerException e) {
 			e.printStackTrace();
 		}
-		
+
 		saveSeparateRatingsFile();
 	}
-	
+
 	/**
 	 * Saves the rating data in a text file that is more simply formatted, for use in
 	 * other scripts, etc.
@@ -212,24 +220,24 @@ public class CreationLoader {
 		for (Creation creation: creations.getCreations()) {
 			for (Recording recording: creation.getRecordings()) {
 				data += recording.getFile().getName();
-				
+
 				if (recording.isBad()) {
 					data += " BAD";
 				} else {
 					data += " GOOD";
 				}
-				
+
 				data += System.lineSeparator();
 			}
 		}
-		
+
 		File ratingsText = new File(userdata, "ratings.txt");
 		try {
 			ratingsText.createNewFile();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		// https://stackoverflow.com/a/1053475
 		try {
 			PrintWriter out = new PrintWriter(ratingsText);
@@ -238,5 +246,27 @@ public class CreationLoader {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * The first time the user loads the application, trim all audio files in the database and
+	 * modulate their volume.
+	 */
+	private void trimModulateAudio(File audioFile) {
+		String filename = audioFile.getAbsolutePath();
+		
+		ProcessBuilder ffmpeg = new ProcessBuilder("bash", "-c",
+				"ffmpeg -hide_banner -i " + filename + " -af silenceremove=1:0:-35dB:1:5:-35dB:0:peak "
+				+ filename);
+		
+		try {
+			Process process = ffmpeg.start();
+			process.waitFor();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
 	}
 }

@@ -24,6 +24,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import namesayer.Creation;
 import namesayer.Creations;
+import namesayer.DatabaseLocation;
 import namesayer.RecordingListener;
 
 /**
@@ -49,8 +50,9 @@ public class RecordingModuleController extends CustomController implements Initi
 
 	private Creation creation;
 	private volatile boolean isRecording;
-	private boolean isDatabaseView;
-	
+
+	private DatabaseLocation databaseLocation;
+
 	private RecordingListener recordingListener;
 
 	public RecordingModuleController() {
@@ -74,13 +76,13 @@ public class RecordingModuleController extends CustomController implements Initi
 
 		recordingText.setText("Press the button below and say the name " + creation.getName() + ".");
 	}
-	
+
 	public void setRecordingListener(RecordingListener listener) {
 		this.recordingListener = listener;
 	}
-	
-	public void setIsDatabaseView(boolean isDatabaseView) {
-		this.isDatabaseView = isDatabaseView;
+
+	public void setSaveLocation(DatabaseLocation databaseLocation) {
+		this.databaseLocation = databaseLocation;
 	}
 
 	public void recordClicked() {
@@ -135,7 +137,6 @@ public class RecordingModuleController extends CustomController implements Initi
 
 					targetDataLine.close();
 				} catch (LineUnavailableException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 					return null;
 				}
@@ -178,18 +179,24 @@ public class RecordingModuleController extends CustomController implements Initi
 		try {
 			AudioFormat format = getAudioFormat();
 			DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
-			
+
 			TargetDataLine line = (TargetDataLine) AudioSystem.getLine(info);
 			line.open(format);
 			line.start();
 
 			File newFile = null;
-			if (isDatabaseView) {
+			switch (databaseLocation) {
+			case TEMP:
+				newFile = generateTempFilename(creation.getName());
+				break;
+			case DATABASE:
 				newFile = new File(new File("database"), creations.generateRecordingFilename(creation.getName()));
-			} else {
+				break;
+			case USER_DATABASE:
 				newFile = new File(new File("userdata"), userCreations.generateRecordingFilename(creation.getName()));
+				break;
 			}
-			
+
 			File outputFile = newFile;
 
 			/*
@@ -202,7 +209,7 @@ public class RecordingModuleController extends CustomController implements Initi
 				protected Void call() throws Exception {
 					AudioInputStream ais = new AudioInputStream(line);
 					AudioSystem.write(ais, AudioFileFormat.Type.WAVE, outputFile);
-					
+
 					return null;
 				}
 			});
@@ -217,9 +224,9 @@ public class RecordingModuleController extends CustomController implements Initi
 
 						line.stop();
 						line.close();
-						
-						recordingListener.recordingFinished(outputFile, creation, isDatabaseView);
-						
+
+						recordingListener.recordingFinished(outputFile, creation, databaseLocation);
+
 						closeWindow();
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -237,12 +244,18 @@ public class RecordingModuleController extends CustomController implements Initi
 		}
 	}
 
+	private File generateTempFilename(String name) {
+		File temp = new File(new File("temp"), name + ".wav");
+		int i = 2;
+		
+		while (temp.exists()) {
+			temp = new File(new File("temp"), name + " (" + i++ + ").wav");
+		}
+		
+		return temp;
+	}
+
 	private AudioFormat getAudioFormat() {
-		/*float sampleRate = 8000;
-		int sampleSizeInBits = 8;
-		int channels = 1;
-		boolean signed = true;
-		boolean bigEndian = true;*/
 		float sampleRate = 44100;
 		int sampleSizeInBits = 16;
 		int channels = 1;
@@ -250,7 +263,7 @@ public class RecordingModuleController extends CustomController implements Initi
 		boolean bigEndian = true;
 		return new AudioFormat(sampleRate, sampleSizeInBits, channels, signed, bigEndian);
 	}
-	
+
 	private void closeWindow() {
 		// adapted from https://stackoverflow.com/questions/13567019/close-fxml-window-by-code-javafx
 		Platform.runLater(new Runnable() {

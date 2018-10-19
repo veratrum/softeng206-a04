@@ -8,7 +8,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -22,20 +21,20 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
 import namesayer.Creation;
 import namesayer.ImportListener;
 import namesayer.Recording;
 import namesayer.Utils;
-import javafx.stage.Stage;
 
 public class ImportScreenController extends CustomController implements ImportListener {
 
 	private File database;
-	
+
 	public ImportScreenController() {
 		this.database = new File("database");
 	}
-	
+
 	/**
 	 * Packages every indexed file in the database directory into a zip file along with metadata.xml.
 	 * Prompts the user to save it on their computer.
@@ -96,7 +95,7 @@ public class ImportScreenController extends CustomController implements ImportLi
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Save Database");
 		alert.setHeaderText(null);
@@ -119,16 +118,16 @@ public class ImportScreenController extends CustomController implements ImportLi
 		fileChooser.setSelectedExtensionFilter(new ExtensionFilter("Zip Archives", "*.zip"));
 
 		File loadLocation = fileChooser.showOpenDialog(scene.getWindow());
-		
+
 		// user closed dialog
 		if (loadLocation == null) {
 			return;
 		}
-		
+
 		database.mkdir();
 
 		doClearDatabase();
-		
+
 		// delete the zero-node metadata created by doClearDatabase()
 		File metadata = new File(database, "metadata.xml");
 		if (metadata.exists()) {
@@ -136,7 +135,7 @@ public class ImportScreenController extends CustomController implements ImportLi
 		}
 
 		boolean successful = true;
-		
+
 		try {
 			ZipInputStream zis = new ZipInputStream(
 					new BufferedInputStream(new FileInputStream(loadLocation)));
@@ -159,7 +158,7 @@ public class ImportScreenController extends CustomController implements ImportLi
 					} catch (final IOException e) {
 						file.delete();
 						successful = false;
-						
+
 						e.printStackTrace();
 					}
 				}
@@ -175,10 +174,10 @@ public class ImportScreenController extends CustomController implements ImportLi
 			}
 		} catch (FileNotFoundException e) {
 			successful = false;
-			
+
 			e.printStackTrace();
 		}
-		
+
 		if (!successful) {
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.setTitle("Error Importing Database");
@@ -188,7 +187,7 @@ public class ImportScreenController extends CustomController implements ImportLi
 			alert.show();
 		} else {
 			creations.reloadData();
-			
+
 			Alert alert = new Alert(AlertType.INFORMATION);
 			alert.setTitle("Import Database");
 			alert.setHeaderText(null);
@@ -204,7 +203,7 @@ public class ImportScreenController extends CustomController implements ImportLi
 	 */
 	public void clearDatabase() {
 		doClearDatabase();
-		
+
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Clear Database");
 		alert.setHeaderText(null);
@@ -212,7 +211,7 @@ public class ImportScreenController extends CustomController implements ImportLi
 
 		alert.showAndWait();
 	}
-	
+
 	private void doClearDatabase() {
 		// i have no idea why this works
 		System.gc();
@@ -222,7 +221,7 @@ public class ImportScreenController extends CustomController implements ImportLi
 			e.printStackTrace();
 		}
 		System.gc();
-		
+
 		File metadata = new File(database, "metadata.xml");
 		metadata.delete();
 		File ratings = new File(database, "ratings.txt");
@@ -241,13 +240,13 @@ public class ImportScreenController extends CustomController implements ImportLi
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxml/ImportEntryModule.fxml"));
 			Pane importModulePane = loader.load();
-			
+
 			Scene importScene = new Scene(importModulePane, 400, 300);
-			
+
 			ImportEntryModuleController controller = loader.getController();
 			controller.setScene(importScene);
 			controller.setImportListener(this);
-			
+
 			Stage importModule = new Stage();
 			importModule.setScene(importScene);
 			importModule.show();
@@ -264,15 +263,16 @@ public class ImportScreenController extends CustomController implements ImportLi
 		return "namesayer_export_" + Utils.getDateFilenameFragment() + ".zip";
 	}
 
+
 	@Override
 	public void importFinished(List<String> names) {
 		doClearDatabase();
-		
+
 		for (String name: names) {
 			Creation creation = new Creation(name);
 			creations.addCreationWithoutSaving(creation);
 		}
-		
+
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Import Database From Text");
 		alert.setHeaderText(null);
@@ -283,6 +283,11 @@ public class ImportScreenController extends CustomController implements ImportLi
 
 	@Override
 	public void importFinishedSorted(List<List<String>> names) {
-		
+
+	}
+
+	@Override
+	public boolean checkNamesBeforeSubmit(List<String> names) {
+		return true;
 	}
 }

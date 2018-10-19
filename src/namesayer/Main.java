@@ -3,8 +3,10 @@ package namesayer;
 import java.io.File;
 import java.io.IOException;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -16,6 +18,7 @@ public class Main extends Application implements MainListener {
 
 	private Stage stage;
 
+	private Scene splashScene;
 	private Scene mainScene;
 	private Scene recordScene;
 	private Scene practiceScene;
@@ -24,6 +27,7 @@ public class Main extends Application implements MainListener {
 	private Scene progressScene;
 	private Scene playlistScene;
 
+	private CustomController splashController;
 	private CustomController mainController;
 	private CustomController recordController;
 	private CustomController practiceController;
@@ -61,14 +65,36 @@ public class Main extends Application implements MainListener {
 	public void start(Stage primaryStage) {
 		this.stage = primaryStage;
 
-		loadCreations();
-		loadProgress();
-		loadScenes();
+		ScreenResult result = loadScene("SplashScreen.fxml", 800, 600);
+		splashScene = result.scene;
+		splashController = result.controller;
 
-		selectedController = mainController;
-
-		stage.setScene(mainScene);
+		stage.setScene(splashScene);
 		stage.show();
+		selectedController = splashController;
+
+		new Thread(new Task<Void>() {
+			@Override
+			public Void call() {
+				loadCreations();
+				loadProgress();
+				loadScenes();
+				
+				return null;
+			}
+
+			@Override
+			public void done() {
+				Platform.runLater(new Task<Void>() {
+					@Override
+					public Void call() {
+						goMain();
+						
+						return null;
+					}
+				});
+			}
+		}).start();
 	}
 
 	public static void main(String[] args) {
