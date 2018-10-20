@@ -23,6 +23,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import namesayer.Creation;
+import namesayer.DatabaseLocation;
 import namesayer.ImportListener;
 import namesayer.Recording;
 import namesayer.Utils;
@@ -269,7 +270,7 @@ public class ImportScreenController extends CustomController implements ImportLi
 		doClearDatabase();
 
 		for (String name: names) {
-			Creation creation = new Creation(name);
+			Creation creation = new Creation(name, DatabaseLocation.USER_DATABASE);
 			creations.addCreationWithoutSaving(creation);
 		}
 

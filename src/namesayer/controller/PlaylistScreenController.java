@@ -29,6 +29,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import namesayer.Creation;
 import namesayer.CreationListener;
+import namesayer.Creations;
 import namesayer.DatabaseLocation;
 import namesayer.ImportListener;
 import namesayer.Recording;
@@ -99,7 +100,7 @@ public class PlaylistScreenController extends CustomController implements Import
 				String nameToAdd = nameToAddToPlaylist.getText();
 
 				// If the name is not already in the playlist - and only contains characters/spaces/hyphens then add it!
-				if( !(playlist.getItems().contains(nameToAdd)) && isNameMadeOfAcceptableCharacters(nameToAdd)) {
+				if(!(playlist.getItems().contains(nameToAdd)) && Creations.isValidName(nameToAdd)) {
 
 					// We need to check if the database or userDatabase has a recording for the names to be added
 					String[] nameToAddParsed = nameToAdd.split("[-\\s]"); 
@@ -107,19 +108,17 @@ public class PlaylistScreenController extends CustomController implements Import
 					for (String s : nameToAddParsed) {
 
 						// If there is no creation for that name then we need to have the user make one!
-						if ((creations.getCreationByName(s) == null) && (userCreations.getCreationByName(s) == null)) {
-
-
-							/**
-							 * INSERT DIALOG BOX ASKING THE USER TO CREATE A CREATION FOR THIS NAME
-							 * IN THE USERCREATIONS DIRECTORY HERE!!!!!!!! - make sure that the user
-							 * cannot exit the create a creation for this name screen/dialog box without
-							 * having made a recording otherwise this will create an error in the playlist
-							 * screen
-							 * 
-							 * make it a method so that it can be called again when we are importing from a 
-							 * text file so that we can check that the creations exist in that situation too!
-							 */
+						if (!creations.creationExists(s) && !userCreations.creationExists(s)) {
+							Platform.runLater(new Task<Void>() {
+								@Override
+								public Void call() {
+									doNewCreation(s);
+									
+									return null;
+								}
+							});
+							
+							return null;
 						}
 					}
 
@@ -200,10 +199,10 @@ public class PlaylistScreenController extends CustomController implements Import
 
 					// Checking if we need to add a space between names - if it is the first name or not
 					if (nameToAdd.length() == 0) {
-						nameToAdd = selectedName.toString();
+						nameToAdd = selectedName.getName();
 					}
 					else {
-						nameToAdd = nameToAdd + " " + selectedName.toString();
+						nameToAdd = nameToAdd + " " + selectedName.getName();
 					}
 				}
 
@@ -323,25 +322,6 @@ public class PlaylistScreenController extends CustomController implements Import
 		mainListener.goMain();
 	}
 
-
-
-
-
-	//=== Below are the helper functions for the event handlers ===//
-
-	public boolean isNameMadeOfAcceptableCharacters(String name) {
-		char[] characters = name.toCharArray();
-
-		for (char c : characters) {
-			// If the character is not a letter, space or hyphen return false!
-			if( !Character.isLetter(c) && !(c == ' ') && !(c == '-') ) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-
 	private void updateNamesList() { // NEED TO CHECK THAT THIS WORKS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 		// We are displaying both the userRecordings names and the database names in the list view - we must find names in userRecordigs not in the database
@@ -441,51 +421,55 @@ public class PlaylistScreenController extends CustomController implements Import
 		for (String name: names) {
 			// we cannot add a non-existent name to the database
 			if (!creations.creationExists(name) && !userCreations.creationExists(name)) {
-				// ask the user if they would like to create the first non-existent name
-				Alert alert = new Alert(AlertType.CONFIRMATION);
-				alert.setTitle("Name not found");
-				alert.setHeaderText("Name " + name + " was not found in the database or user database.");
-				alert.setContentText("Would you like to add it now?");
-
-				Optional<ButtonType> result = alert.showAndWait();
-				if (result.get() == ButtonType.OK) {
-					// open a new window allowing the user to add a new name
-
-					try {
-						Stage creationStage = new Stage();
-
-						File src = new File("src");
-						File namesayer = new File(src, "namesayer");
-						File fxml = new File(namesayer, "fxml");
-						File loaderPath = new File(fxml, "CreationPane.fxml");
-						URL path = loaderPath.toURI().toURL();
-						FXMLLoader loader = new FXMLLoader(path);
-						Pane creationPane = loader.load();
-
-						creationPane.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-
-						Scene creationScene = new Scene(creationPane, 400, 300);
-
-						creationController = loader.getController();
-						creationController.init();
-						creationController.setCreations(creations);
-						creationController.setUserCreations(userCreations);
-						creationController.setCreationListener(this);
-						creationController.setDatabaseLocation(DatabaseLocation.USER_DATABASE);
-						creationController.setDefaultText(name);
-
-						creationStage.setScene(creationScene);
-						creationStage.show();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
+				doNewCreation(name);
 				
 				return false;
 			}
 		}
 		
 		return true;
+	}
+	
+	private void doNewCreation(String name) {
+		// ask the user if they would like to create the first non-existent name
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("Name not found");
+		alert.setHeaderText("Name " + name + " was not found in the database or user database.");
+		alert.setContentText("Would you like to add it now?");
+
+		Optional<ButtonType> result = alert.showAndWait();
+		if (result.get() == ButtonType.OK) {
+			// open a new window allowing the user to add a new name
+
+			try {
+				Stage creationStage = new Stage();
+
+				File src = new File("src");
+				File namesayer = new File(src, "namesayer");
+				File fxml = new File(namesayer, "fxml");
+				File loaderPath = new File(fxml, "CreationPane.fxml");
+				URL path = loaderPath.toURI().toURL();
+				FXMLLoader loader = new FXMLLoader(path);
+				Pane creationPane = loader.load();
+
+				creationPane.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+
+				Scene creationScene = new Scene(creationPane, 400, 300);
+
+				creationController = loader.getController();
+				creationController.init();
+				creationController.setCreations(creations);
+				creationController.setUserCreations(userCreations);
+				creationController.setCreationListener(this);
+				creationController.setDatabaseLocation(DatabaseLocation.USER_DATABASE);
+				creationController.setDefaultText(name);
+
+				creationStage.setScene(creationScene);
+				creationStage.show();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	private void doNewRecording(Creation creation) {

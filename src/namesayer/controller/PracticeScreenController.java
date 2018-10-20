@@ -161,7 +161,8 @@ public class PracticeScreenController extends CustomController implements Record
 			recordingController = loader.getController();
 			recordingController.init();
 			// use dummy creation to pass name
-			recordingController.setCreation(new Creation(currentRecordingFile.getName().replaceFirst("[.][^.]+$", "")));
+			recordingController.setCreation(new Creation(currentRecordingFile.getName().replaceFirst("[.][^.]+$", ""),
+					DatabaseLocation.TEMP));
 			recordingController.setRecordingListener(this);
 			recordingController.setSaveLocation(DatabaseLocation.TEMP);
 
@@ -242,23 +243,49 @@ public class PracticeScreenController extends CustomController implements Record
 			if(parsedName.length == 1) {
 				currentRecordingFile = new File("Playlist/" + currentName + ".wav");
 
-				clip1 = AudioSystem.getAudioInputStream(new File(creations.getCreationByName(parsedName[0]).getRandomGoodRecording().getFile().toString()));
+				Creation selectedCreation = null;
+				if (creations.creationExists(parsedName[0])) {
+					selectedCreation = creations.getCreationByName(parsedName[0]);
+				} else if (userCreations.creationExists(parsedName[0])) {
+					selectedCreation = userCreations.getCreationByName(parsedName[0]);
+				} else {
+					// a non-existent creation slipped past the checks. not good
+				}
+				
+				clip1 = AudioSystem.getAudioInputStream(new File(selectedCreation.getRandomGoodRecording().getFile().toString()));
 				AudioSystem.write(clip1 ,AudioFileFormat.Type.WAVE, currentRecordingFile);
 
 			}
 			else { // Otherwise Iterating over the parsed name to create the audioFile.
 
 				for (int i = 0; i < parsedName.length - 1; i++) {
+					Creation firstCreation = null;
+					if (creations.creationExists(parsedName[i])) {
+						firstCreation = creations.getCreationByName(parsedName[i]);
+					} else if (userCreations.creationExists(parsedName[i])) {
+						firstCreation = userCreations.getCreationByName(parsedName[i]);
+					} else {
+						// a non-existent creation slipped past the checks. not good
+					}
 
 					if (i == 0) { // first iteration so we need to get two recordings.
-						firstRecording = creations.getCreationByName(parsedName[i]).getRandomGoodRecording();
+						firstRecording = firstCreation.getRandomGoodRecording();
 						clip1 = AudioSystem.getAudioInputStream(new File(firstRecording.getFile().toString()));
 					}
 					else { // its not the first iteration so the first recording is the output of the last iteration
 						clip1 = AudioSystem.getAudioInputStream(new File("Playlist/temp.wav"));
 					}
 
-					secondRecording = creations.getCreationByName(parsedName[i+1]).getRandomGoodRecording();
+					Creation secondCreation = null;
+					if (creations.creationExists(parsedName[i + 1])) {
+						secondCreation = creations.getCreationByName(parsedName[i + 1]);
+					} else if (userCreations.creationExists(parsedName[i + 1])) {
+						secondCreation = userCreations.getCreationByName(parsedName[i + 1]);
+					} else {
+						// a non-existent creation slipped past the checks. not good
+					}
+					
+					secondRecording = secondCreation.getRandomGoodRecording();
 					clip2 = AudioSystem.getAudioInputStream(new File(secondRecording.getFile().toString()));
 
 

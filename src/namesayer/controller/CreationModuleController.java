@@ -89,7 +89,7 @@ public class CreationModuleController extends CustomController implements Initia
 		} else {
 			boolean doNewRecording = newRecordingCheckBox.isSelected();
 
-			Creation newCreation = new Creation(name);
+			Creation newCreation = new Creation(name, databaseLocation);
 
 			creationListener.creationFinished(newCreation, doNewRecording, databaseLocation);
 

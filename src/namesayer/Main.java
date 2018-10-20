@@ -47,6 +47,8 @@ public class Main extends Application implements MainListener {
 	// Creating a field to store the playlistData so that it can be accessed between create a playlist and play a playlist screens.
 	private ObservableList<String> playlistData  = FXCollections.observableArrayList();;
 
+	private boolean secondPassed;
+
 	/**
 	 * Allows us to return both scene and controller from the helper function
 	 * Avoids code reuse
@@ -73,13 +75,15 @@ public class Main extends Application implements MainListener {
 		stage.show();
 		selectedController = splashController;
 
+		secondPassed = false;
+
 		new Thread(new Task<Void>() {
 			@Override
 			public Void call() {
 				loadCreations();
 				loadProgress();
 				loadScenes();
-				
+
 				return null;
 			}
 
@@ -88,8 +92,41 @@ public class Main extends Application implements MainListener {
 				Platform.runLater(new Task<Void>() {
 					@Override
 					public Void call() {
-						goMain();
-						
+						if (secondPassed) {
+							goMain();
+						} else {
+							secondPassed = true;
+						}
+
+						return null;
+					}
+				});
+			}
+		}).start();
+
+		new Thread(new Task<Void>() {
+			@Override
+			public Void call() {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+
+				return null;
+			}
+
+			@Override
+			public void done() {
+				Platform.runLater(new Task<Void>() {
+					@Override
+					public Void call() {
+						if (secondPassed) {
+							goMain();
+						} else {
+							secondPassed = true;
+						}
+
 						return null;
 					}
 				});
@@ -102,8 +139,8 @@ public class Main extends Application implements MainListener {
 	}
 
 	private void loadCreations() {
-		creations = new Creations("database", "metadata.xml");
-		userCreations = new Creations("userdata", "metadata.xml");
+		creations = new Creations(DatabaseLocation.DATABASE, "database", "metadata.xml");
+		userCreations = new Creations(DatabaseLocation.USER_DATABASE, "userdata", "metadata.xml");
 	}
 
 	private void loadProgress() {

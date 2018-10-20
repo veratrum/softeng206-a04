@@ -9,10 +9,12 @@ public class Creations {
 
 	private List<Creation> creations;
 	private CreationLoader creationLoader;
+	private DatabaseLocation location;
 	
-	public Creations(String directory, String xmlFile) {
+	public Creations(DatabaseLocation location, String directory, String xmlFile) {
 		creations = new ArrayList<Creation>();
-		creationLoader = new CreationLoader(this, directory, xmlFile);
+		this.location = location;
+		creationLoader = new CreationLoader(this, this.location, directory, xmlFile);
 
 		loadData();
 	}

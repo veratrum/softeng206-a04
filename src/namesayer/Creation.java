@@ -8,10 +8,12 @@ public class Creation {
 
 	private String name;
 	private List<Recording> recordings;
+	private DatabaseLocation location;
 	
-	public Creation(String name) {
+	public Creation(String name, DatabaseLocation location) {
 		this.name = name;
 		this.recordings = new ArrayList<Recording>();
+		this.location = location;
 	}
 	
 	public void delete() {
@@ -71,6 +73,18 @@ public class Creation {
 	
 	@Override
 	public String toString() {
-		return name;
+		String fullName = name;
+		
+		switch (location) {
+		case DATABASE:
+			break;
+		case USER_DATABASE:
+			fullName = "[USER] " + name;
+			break;
+		default:
+			break;
+		}
+		
+		return fullName;
 	}
 }
