@@ -29,7 +29,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import namesayer.Creation;
 import namesayer.CreationListener;
-import namesayer.Creations;
 import namesayer.DatabaseLocation;
 import namesayer.ImportListener;
 import namesayer.Recording;
@@ -60,9 +59,13 @@ public class PlaylistScreenController extends CustomController implements Import
 
 	@Override
 	public void init() {
-		updateNamesList();
 		addListenerToSearchTextField();
 		nameToSearchFor.setPromptText("Search for a name");
+	}
+
+	@Override
+	public void load() {
+		updateNamesList();
 	}
 
 	//=== Event handlers for the buttons on the play screen ===//
@@ -100,7 +103,7 @@ public class PlaylistScreenController extends CustomController implements Import
 				String nameToAdd = nameToAddToPlaylist.getText();
 
 				// If the name is not already in the playlist - and only contains characters/spaces/hyphens then add it!
-				if(!(playlist.getItems().contains(nameToAdd)) && Creations.isValidName(nameToAdd)) {
+				if(!(playlist.getItems().contains(nameToAdd)) && isValidCompositeName(nameToAdd)) {
 
 					// We need to check if the database or userDatabase has a recording for the names to be added
 					String[] nameToAddParsed = nameToAdd.split("[-\\s]"); 
@@ -113,11 +116,11 @@ public class PlaylistScreenController extends CustomController implements Import
 								@Override
 								public Void call() {
 									doNewCreation(s);
-									
+
 									return null;
 								}
 							});
-							
+
 							return null;
 						}
 					}
@@ -422,14 +425,14 @@ public class PlaylistScreenController extends CustomController implements Import
 			// we cannot add a non-existent name to the database
 			if (!creations.creationExists(name) && !userCreations.creationExists(name)) {
 				doNewCreation(name);
-				
+
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
-	
+
 	private void doNewCreation(String name) {
 		// ask the user if they would like to create the first non-existent name
 		Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -471,7 +474,7 @@ public class PlaylistScreenController extends CustomController implements Import
 			}
 		}
 	}
-	
+
 	private void doNewRecording(Creation creation) {
 		try {
 			Stage recordingStage = new Stage();
@@ -507,7 +510,7 @@ public class PlaylistScreenController extends CustomController implements Import
 	@Override
 	public void creationFinished(Creation creation, boolean newRecording, DatabaseLocation location) {
 		userCreations.addCreation(creation);
-		
+
 		if (newRecording) {
 			doNewRecording(creation);
 		}
@@ -522,8 +525,28 @@ public class PlaylistScreenController extends CustomController implements Import
 		Recording newRecording = new Recording(creation, recordingFile);
 
 		creation.addRecording(newRecording);
-		
+
 		userCreations.saveState();
+	}
+
+	private boolean isValidCompositeName(String name) {
+		if (name.length() == 0 || name.length() > 32) {
+			return false;
+		}
+
+		if (!Character.isLetter(name.charAt(0)) || !Character.isUpperCase(name.charAt(0))) {
+			return false;
+		}
+
+		for (int i = 0; i < name.length(); i++) {
+			char character = name.charAt(i);
+
+			if (!Character.isLetter(character) && !(character == '_') && !(character == ' ') && !(character == '-')) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 }

@@ -267,11 +267,9 @@ public class ImportScreenController extends CustomController implements ImportLi
 
 	@Override
 	public void importFinished(List<String> names) {
-		doClearDatabase();
-
 		for (String name: names) {
 			Creation creation = new Creation(name, DatabaseLocation.USER_DATABASE);
-			creations.addCreationWithoutSaving(creation);
+			userCreations.addCreationWithoutSaving(creation);
 		}
 
 		Alert alert = new Alert(AlertType.INFORMATION);

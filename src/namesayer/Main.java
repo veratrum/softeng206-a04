@@ -1,5 +1,6 @@
 package namesayer;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import javafx.application.Application;
@@ -22,7 +23,6 @@ public class Main extends Application implements MainListener {
 	private Scene mainScene;
 	private Scene recordScene;
 	private Scene practiceScene;
-	private Scene helpScene;
 	private Scene importScene;
 	private Scene progressScene;
 	private Scene playlistScene;
@@ -31,7 +31,6 @@ public class Main extends Application implements MainListener {
 	private CustomController mainController;
 	private CustomController recordController;
 	private CustomController practiceController;
-	private CustomController helpController;
 	private CustomController importController;
 	private CustomController progressController;
 	private CustomController playlistController;
@@ -160,10 +159,6 @@ public class Main extends Application implements MainListener {
 		practiceScene = result.scene;
 		practiceController = result.controller;
 
-		result = loadScene("HelpScreen.fxml", 800, 600);
-		helpScene = result.scene;
-		helpController = result.controller;
-
 		result = loadScene("ImportScreen.fxml", 800, 600);
 		importScene = result.scene;
 		importController = result.controller;
@@ -228,10 +223,16 @@ public class Main extends Application implements MainListener {
 
 	@Override
 	public void goHelp() {
-		selectedController.dispose();
+		try {
+			Desktop.getDesktop().open(new File("Namesayer_User_Manual.pdf"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		/*selectedController.dispose();
 		stage.setScene(helpScene);
 		selectedController = helpController;
-		selectedController.load();
+		selectedController.load();*/
 	}
 
 	@Override
