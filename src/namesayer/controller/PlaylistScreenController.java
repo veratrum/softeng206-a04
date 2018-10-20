@@ -31,12 +31,13 @@ import namesayer.Creation;
 import namesayer.CreationListener;
 import namesayer.DatabaseLocation;
 import namesayer.ImportListener;
+import namesayer.PlaylistListener;
 import namesayer.Recording;
 import namesayer.RecordingListener;
 import namesayer.Utils;
 
 
-public class PlaylistScreenController extends CustomController implements ImportListener, CreationListener, RecordingListener {
+public class PlaylistScreenController extends CustomController implements ImportListener, CreationListener, RecordingListener, PlaylistListener {
 
 	// Declaring the fields used in the controller
 	@FXML
@@ -57,11 +58,14 @@ public class PlaylistScreenController extends CustomController implements Import
 	private CreationModuleController creationController;
 	private RecordingModuleController recordingController;
 
+
 	@Override
 	public void init() {
 		updateNamesList();
 		addListenerToSearchTextField();
 		nameToSearchFor.setPromptText("Search for a name");
+		
+		
 	}
 
 	//=== Event handlers for the buttons on the play screen ===//
@@ -81,11 +85,9 @@ public class PlaylistScreenController extends CustomController implements Import
 		}
 		else {
 			// Passing the practice screen the playlistData
-			playlistData.addAll(getPlaylist());
+			playlistData.clear();
+			playlistData.setAll(getPlaylist());
 			mainListener.goPractice();
-
-			// Clearing the playlist listView
-			playlist.getItems().clear();
 		}
 	}
 	public void addNameToPlaylist() {
@@ -541,5 +543,13 @@ public class PlaylistScreenController extends CustomController implements Import
 		
 		userCreations.saveState();
 	}
+	
+	
+
+	@Override
+	public void playlistFinished() {
+		playlist.getItems().clear();
+	}
+
 
 }

@@ -12,6 +12,14 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import namesayer.controller.CustomController;
+import namesayer.controller.HelpScreenController;
+import namesayer.controller.ImportScreenController;
+import namesayer.controller.MainScreenController;
+import namesayer.controller.PlaylistScreenController;
+import namesayer.controller.PracticeScreenController;
+import namesayer.controller.ProgressScreenController;
+import namesayer.controller.RecordScreenController;
+import namesayer.controller.SplashScreenController;
 
 
 public class Main extends Application implements MainListener {
@@ -27,14 +35,14 @@ public class Main extends Application implements MainListener {
 	private Scene progressScene;
 	private Scene playlistScene;
 
-	private CustomController splashController;
-	private CustomController mainController;
-	private CustomController recordController;
-	private CustomController practiceController;
-	private CustomController helpController;
-	private CustomController importController;
-	private CustomController progressController;
-	private CustomController playlistController;
+	private SplashScreenController splashController;
+	private MainScreenController mainController;
+	private RecordScreenController recordController;
+	private PracticeScreenController practiceController;
+	private HelpScreenController helpController;
+	private ImportScreenController importController;
+	private ProgressScreenController progressController;
+	private PlaylistScreenController playlistController;
 
 	/* the currently selected scene's controller. we need this to call its dispose method
 	before changing to a different scene */
@@ -67,7 +75,7 @@ public class Main extends Application implements MainListener {
 
 		ScreenResult result = loadScene("SplashScreen.fxml", 800, 600);
 		splashScene = result.scene;
-		splashController = result.controller;
+		splashController = (SplashScreenController) result.controller;
 
 		stage.setScene(splashScene);
 		stage.show();
@@ -113,31 +121,34 @@ public class Main extends Application implements MainListener {
 	private void loadScenes() {
 		ScreenResult result = loadScene("MainScreen.fxml", 800, 600);
 		mainScene = result.scene;
-		mainController = result.controller;
+		mainController = (MainScreenController) result.controller;
 
 		result = loadScene("RecordScreen.fxml", 800, 600);
 		recordScene = result.scene;
-		recordController = result.controller;
+		recordController = (RecordScreenController) result.controller;
 
 		result = loadScene("PracticeScreen.fxml", 800, 600);
 		practiceScene = result.scene;
-		practiceController = result.controller;
+		practiceController = (PracticeScreenController) result.controller;
+		
 
 		result = loadScene("HelpScreen.fxml", 800, 600);
 		helpScene = result.scene;
-		helpController = result.controller;
+		helpController = (HelpScreenController) result.controller;
 
 		result = loadScene("ImportScreen.fxml", 800, 600);
 		importScene = result.scene;
-		importController = result.controller;
+		importController = (ImportScreenController) result.controller;
 
 		result = loadScene("ProgressScreen.fxml", 800, 600);
 		progressScene = result.scene;
-		progressController = result.controller;
+		progressController = (ProgressScreenController) result.controller;
 
 		result = loadScene("PlaylistScreen.fxml", 800, 600);
 		playlistScene = result.scene;
-		playlistController = result.controller;
+		playlistController = (PlaylistScreenController) result.controller;
+		
+		practiceController.addPlaylistListener(playlistController);
 	}
 
 	private ScreenResult loadScene(String fxmlPath, int width, int height) {

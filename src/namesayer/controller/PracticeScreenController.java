@@ -28,6 +28,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import namesayer.Creation;
 import namesayer.DatabaseLocation;
+import namesayer.PlaylistListener;
 import namesayer.Recording;
 import namesayer.RecordingListener;
 
@@ -57,6 +58,12 @@ public class PracticeScreenController extends CustomController implements Record
 
 	private RecordingModuleController recordingController;
 	private File lastRecording;
+	
+
+	// We need some counter to know how far we are through the playlist
+	private int playlistPositionCounter  = 0;
+
+	private PlaylistListener playlistListener;
 
 	// fields used for user feedback to track their progress
 	private Optional<String> userRating;
@@ -68,22 +75,24 @@ public class PracticeScreenController extends CustomController implements Record
 
 	@Override
 	public void load() {
+		playlistPositionCounter = 0;
 		doGenerateAudio();
 		setPreviousAndNextAndCurrentNames();
+		setPreviousAndNextButtonProperties();
 		previousButton.setDisable(true);
 		playAttempt.setDisable(true);
+		
 	}
 
-	// We need some counter to know how far we are through the playlist
-	private int playlistPositionCounter  = 0;
 
 
 
+	
 
 	// ======================= Below are the event handlers to this controller class ====================================
 
 	public void returnToHome() {
-		mainListener.goMain();
+		mainListener.goPlaylist();
 	}
 
 	private void initMediaPlayer() {
@@ -116,7 +125,10 @@ public class PracticeScreenController extends CustomController implements Record
 		// If playlist is finished then the button should open the progress dialog box and return user to main screen.
 		if (isPlaylistFinished) {
 			askUserForRating();
+			playlistListener.playlistFinished();
+			playlistData.clear();
 			mainListener.goMain();
+			
 		}
 		else {
 			setPreviousAndNextAndCurrentNames();
@@ -379,5 +391,9 @@ public class PracticeScreenController extends CustomController implements Record
 		lastRecording = recording;
 
 		playAttempt.setDisable(false);
+	}
+	
+	public void addPlaylistListener(PlaylistListener playlistListener) {
+		this.playlistListener= playlistListener;
 	}
 }
