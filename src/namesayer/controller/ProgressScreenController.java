@@ -21,6 +21,11 @@ public class ProgressScreenController extends CustomController {
 	/**
 	 * A method which is called when the return to main screen button is clicked - returns the user to the main screen
 	 */
+	
+	@Override
+	public void load() {
+		updateProgress();
+	}
 
 	public void GoToMainScreen(ActionEvent event) {
 		mainListener.goMain();

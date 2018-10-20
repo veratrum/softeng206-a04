@@ -61,11 +61,15 @@ public class PlaylistScreenController extends CustomController implements Import
 
 	@Override
 	public void init() {
-		updateNamesList();
 		addListenerToSearchTextField();
 		nameToSearchFor.setPromptText("Search for a name");
 		
 		
+	}
+
+	@Override
+	public void load() {
+		updateNamesList();
 	}
 
 	//=== Event handlers for the buttons on the play screen ===//
@@ -101,7 +105,7 @@ public class PlaylistScreenController extends CustomController implements Import
 				String nameToAdd = nameToAddToPlaylist.getText();
 
 				// If the name is not already in the playlist - and only contains characters/spaces/hyphens then add it!
-				if( !(playlist.getItems().contains(nameToAdd)) && isNameMadeOfAcceptableCharacters(nameToAdd)) {
+				if(!(playlist.getItems().contains(nameToAdd)) && isValidCompositeName(nameToAdd)) {
 
 					// We need to check if the database or userDatabase has a recording for the names to be added
 					String[] nameToAddParsed = nameToAdd.split("[-\\s]"); 
@@ -109,19 +113,17 @@ public class PlaylistScreenController extends CustomController implements Import
 					for (String s : nameToAddParsed) {
 
 						// If there is no creation for that name then we need to have the user make one!
-						if ((creations.getCreationByName(s) == null) && (userCreations.getCreationByName(s) == null)) {
+						if (!creations.creationExists(s) && !userCreations.creationExists(s)) {
+							Platform.runLater(new Task<Void>() {
+								@Override
+								public Void call() {
+									doNewCreation(s);
 
+									return null;
+								}
+							});
 
-							/**
-							 * INSERT DIALOG BOX ASKING THE USER TO CREATE A CREATION FOR THIS NAME
-							 * IN THE USERCREATIONS DIRECTORY HERE!!!!!!!! - make sure that the user
-							 * cannot exit the create a creation for this name screen/dialog box without
-							 * having made a recording otherwise this will create an error in the playlist
-							 * screen
-							 * 
-							 * make it a method so that it can be called again when we are importing from a 
-							 * text file so that we can check that the creations exist in that situation too!
-							 */
+							return null;
 						}
 					}
 
@@ -202,10 +204,10 @@ public class PlaylistScreenController extends CustomController implements Import
 
 					// Checking if we need to add a space between names - if it is the first name or not
 					if (nameToAdd.length() == 0) {
-						nameToAdd = selectedName.toString();
+						nameToAdd = selectedName.getName();
 					}
 					else {
-						nameToAdd = nameToAdd + " " + selectedName.toString();
+						nameToAdd = nameToAdd + " " + selectedName.getName();
 					}
 				}
 
@@ -325,25 +327,6 @@ public class PlaylistScreenController extends CustomController implements Import
 		mainListener.goMain();
 	}
 
-
-
-
-
-	//=== Below are the helper functions for the event handlers ===//
-
-	public boolean isNameMadeOfAcceptableCharacters(String name) {
-		char[] characters = name.toCharArray();
-
-		for (char c : characters) {
-			// If the character is not a letter, space or hyphen return false!
-			if( !Character.isLetter(c) && !(c == ' ') && !(c == '-') ) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-
 	private void updateNamesList() { // NEED TO CHECK THAT THIS WORKS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 		// We are displaying both the userRecordings names and the database names in the list view - we must find names in userRecordigs not in the database
@@ -443,53 +426,57 @@ public class PlaylistScreenController extends CustomController implements Import
 		for (String name: names) {
 			// we cannot add a non-existent name to the database
 			if (!creations.creationExists(name) && !userCreations.creationExists(name)) {
-				// ask the user if they would like to create the first non-existent name
-				Alert alert = new Alert(AlertType.CONFIRMATION);
-				alert.setTitle("Name not found");
-				alert.setHeaderText("Name " + name + " was not found in the database or user database.");
-				alert.setContentText("Would you like to add it now?");
+				doNewCreation(name);
 
-				Optional<ButtonType> result = alert.showAndWait();
-				if (result.get() == ButtonType.OK) {
-					// open a new window allowing the user to add a new name
-
-					try {
-						Stage creationStage = new Stage();
-
-						File src = new File("src");
-						File namesayer = new File(src, "namesayer");
-						File fxml = new File(namesayer, "fxml");
-						File loaderPath = new File(fxml, "CreationPane.fxml");
-						URL path = loaderPath.toURI().toURL();
-						FXMLLoader loader = new FXMLLoader(path);
-						Pane creationPane = loader.load();
-
-						creationPane.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-
-						Scene creationScene = new Scene(creationPane, 400, 300);
-
-						creationController = loader.getController();
-						creationController.init();
-						creationController.setCreations(creations);
-						creationController.setUserCreations(userCreations);
-						creationController.setCreationListener(this);
-						creationController.setDatabaseLocation(DatabaseLocation.USER_DATABASE);
-						creationController.setDefaultText(name);
-
-						creationStage.setScene(creationScene);
-						creationStage.show();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-				
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
-	
+
+	private void doNewCreation(String name) {
+		// ask the user if they would like to create the first non-existent name
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("Name not found");
+		alert.setHeaderText("Name " + name + " was not found in the database or user database.");
+		alert.setContentText("Would you like to add it now?");
+
+		Optional<ButtonType> result = alert.showAndWait();
+		if (result.get() == ButtonType.OK) {
+			// open a new window allowing the user to add a new name
+
+			try {
+				Stage creationStage = new Stage();
+
+				File src = new File("src");
+				File namesayer = new File(src, "namesayer");
+				File fxml = new File(namesayer, "fxml");
+				File loaderPath = new File(fxml, "CreationPane.fxml");
+				URL path = loaderPath.toURI().toURL();
+				FXMLLoader loader = new FXMLLoader(path);
+				Pane creationPane = loader.load();
+
+				creationPane.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+
+				Scene creationScene = new Scene(creationPane, 400, 300);
+
+				creationController = loader.getController();
+				creationController.init();
+				creationController.setCreations(creations);
+				creationController.setUserCreations(userCreations);
+				creationController.setCreationListener(this);
+				creationController.setDatabaseLocation(DatabaseLocation.USER_DATABASE);
+				creationController.setDefaultText(name);
+
+				creationStage.setScene(creationScene);
+				creationStage.show();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	private void doNewRecording(Creation creation) {
 		try {
 			Stage recordingStage = new Stage();
@@ -525,7 +512,7 @@ public class PlaylistScreenController extends CustomController implements Import
 	@Override
 	public void creationFinished(Creation creation, boolean newRecording, DatabaseLocation location) {
 		userCreations.addCreation(creation);
-		
+
 		if (newRecording) {
 			doNewRecording(creation);
 		}
@@ -540,7 +527,7 @@ public class PlaylistScreenController extends CustomController implements Import
 		Recording newRecording = new Recording(creation, recordingFile);
 
 		creation.addRecording(newRecording);
-		
+
 		userCreations.saveState();
 	}
 	
@@ -551,5 +538,25 @@ public class PlaylistScreenController extends CustomController implements Import
 		playlist.getItems().clear();
 	}
 
+
+	private boolean isValidCompositeName(String name) {
+		if (name.length() == 0 || name.length() > 32) {
+			return false;
+		}
+
+		if (!Character.isLetter(name.charAt(0)) || !Character.isUpperCase(name.charAt(0))) {
+			return false;
+		}
+
+		for (int i = 0; i < name.length(); i++) {
+			char character = name.charAt(i);
+
+			if (!Character.isLetter(character) && !(character == '_') && !(character == ' ') && !(character == '-')) {
+				return false;
+			}
+		}
+
+		return true;
+	}
 
 }

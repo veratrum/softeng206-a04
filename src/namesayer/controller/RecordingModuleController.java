@@ -23,7 +23,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import namesayer.Creation;
-import namesayer.Creations;
 import namesayer.DatabaseLocation;
 import namesayer.RecordingListener;
 

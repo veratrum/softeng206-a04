@@ -24,11 +24,13 @@ import org.xml.sax.SAXException;
 public class CreationLoader {
 
 	private Creations creations;
+	private DatabaseLocation location;
 	private File userdata;
 	private File metadata;
 
-	public CreationLoader(Creations creations, String directory, String xmlFile) {
+	public CreationLoader(Creations creations, DatabaseLocation location, String directory, String xmlFile) {
 		this.creations = creations;
+		this.location = location;
 
 		this.userdata = new File(directory);
 		this.metadata = new File(userdata, xmlFile);
@@ -70,7 +72,7 @@ public class CreationLoader {
 
 					NodeList recordingNodes = creationElement.getElementsByTagName("recording");
 
-					Creation creation = new Creation(creationName);
+					Creation creation = new Creation(creationName, location);
 
 					for (int j = 0;j < recordingNodes.getLength(); j++) {
 						Node recordingNode = recordingNodes.item(j);
@@ -140,7 +142,7 @@ public class CreationLoader {
 						creations.getCreationByName(properName).addRecording(newRecording);
 					} else {
 						// otherwise, set up a new recording
-						Creation newCreation = new Creation(properName);
+						Creation newCreation = new Creation(properName, location);
 						Recording newRecording = new Recording(newCreation, wav);
 						newCreation.addRecording(newRecording);
 

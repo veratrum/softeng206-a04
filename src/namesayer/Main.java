@@ -1,5 +1,6 @@
 package namesayer;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import javafx.application.Application;
@@ -30,10 +31,10 @@ public class Main extends Application implements MainListener {
 	private Scene mainScene;
 	private Scene recordScene;
 	private Scene practiceScene;
-	private Scene helpScene;
 	private Scene importScene;
 	private Scene progressScene;
 	private Scene playlistScene;
+
 
 	private SplashScreenController splashController;
 	private MainScreenController mainController;
@@ -43,6 +44,7 @@ public class Main extends Application implements MainListener {
 	private ImportScreenController importController;
 	private ProgressScreenController progressController;
 	private PlaylistScreenController playlistController;
+
 
 	/* the currently selected scene's controller. we need this to call its dispose method
 	before changing to a different scene */
@@ -54,6 +56,8 @@ public class Main extends Application implements MainListener {
 
 	// Creating a field to store the playlistData so that it can be accessed between create a playlist and play a playlist screens.
 	private ObservableList<String> playlistData  = FXCollections.observableArrayList();;
+
+	private boolean secondPassed;
 
 	/**
 	 * Allows us to return both scene and controller from the helper function
@@ -81,13 +85,15 @@ public class Main extends Application implements MainListener {
 		stage.show();
 		selectedController = splashController;
 
+		secondPassed = false;
+
 		new Thread(new Task<Void>() {
 			@Override
 			public Void call() {
 				loadCreations();
 				loadProgress();
 				loadScenes();
-				
+
 				return null;
 			}
 
@@ -96,8 +102,41 @@ public class Main extends Application implements MainListener {
 				Platform.runLater(new Task<Void>() {
 					@Override
 					public Void call() {
-						goMain();
-						
+						if (secondPassed) {
+							goMain();
+						} else {
+							secondPassed = true;
+						}
+
+						return null;
+					}
+				});
+			}
+		}).start();
+
+		new Thread(new Task<Void>() {
+			@Override
+			public Void call() {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+
+				return null;
+			}
+
+			@Override
+			public void done() {
+				Platform.runLater(new Task<Void>() {
+					@Override
+					public Void call() {
+						if (secondPassed) {
+							goMain();
+						} else {
+							secondPassed = true;
+						}
+
 						return null;
 					}
 				});
@@ -110,8 +149,8 @@ public class Main extends Application implements MainListener {
 	}
 
 	private void loadCreations() {
-		creations = new Creations("database", "metadata.xml");
-		userCreations = new Creations("userdata", "metadata.xml");
+		creations = new Creations(DatabaseLocation.DATABASE, "database", "metadata.xml");
+		userCreations = new Creations(DatabaseLocation.USER_DATABASE, "userdata", "metadata.xml");
 	}
 
 	private void loadProgress() {
@@ -131,11 +170,6 @@ public class Main extends Application implements MainListener {
 		practiceScene = result.scene;
 		practiceController = (PracticeScreenController) result.controller;
 		
-
-		result = loadScene("HelpScreen.fxml", 800, 600);
-		helpScene = result.scene;
-		helpController = (HelpScreenController) result.controller;
-
 		result = loadScene("ImportScreen.fxml", 800, 600);
 		importScene = result.scene;
 		importController = (ImportScreenController) result.controller;
@@ -202,10 +236,16 @@ public class Main extends Application implements MainListener {
 
 	@Override
 	public void goHelp() {
-		selectedController.dispose();
+		try {
+			Desktop.getDesktop().open(new File("Namesayer_User_Manual.pdf"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		/*selectedController.dispose();
 		stage.setScene(helpScene);
 		selectedController = helpController;
-		selectedController.load();
+		selectedController.load();*/
 	}
 
 	@Override
