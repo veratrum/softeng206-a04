@@ -327,8 +327,8 @@ public class PlaylistScreenController extends CustomController implements Import
 		mainListener.goMain();
 	}
 
-	private void updateNamesList() { // NEED TO CHECK THAT THIS WORKS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
+	private void updateNamesList() { 
+		
 		// We are displaying both the userRecordings names and the database names in the list view - we must find names in userRecordigs not in the database
 		ObservableList<Creation> databaseNames = FXCollections.observableArrayList(creations.getCreations());
 		ObservableList<Creation> userCreationNames = FXCollections.observableArrayList(userCreations.getCreations());
@@ -438,6 +438,10 @@ public class PlaylistScreenController extends CustomController implements Import
 	private void doNewCreation(String name) {
 		// ask the user if they would like to create the first non-existent name
 		Alert alert = new Alert(AlertType.CONFIRMATION);
+		
+		DialogPane dialogPane = alert.getDialogPane();
+		dialogPane.getStylesheets().add(getClass().getResource("dialog.css").toExternalForm());
+		
 		alert.setTitle("Name not found");
 		alert.setHeaderText("Name " + name + " was not found in the database or user database.");
 		alert.setContentText("Would you like to add it now?");
