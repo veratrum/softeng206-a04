@@ -63,8 +63,6 @@ public class PlaylistScreenController extends CustomController implements Import
 	public void init() {
 		addListenerToSearchTextField();
 		nameToSearchFor.setPromptText("Search for a name");
-		
-		
 	}
 
 	@Override
@@ -188,7 +186,6 @@ public class PlaylistScreenController extends CustomController implements Import
 
 	public void addToNameSelection() {
 
-
 		// Creating the background task that adds the name to the textField 
 		Task<Void> task = new Task<Void>() {
 			@Override
@@ -226,7 +223,7 @@ public class PlaylistScreenController extends CustomController implements Import
 									dialogPane.getStylesheets().add(getClass().getResource("dialog.css").toExternalForm());
 									alert.setTitle("Name Length Error");
 									alert.setHeaderText("Name Length Error");
-									alert.setContentText("Error the name you are trying to create\nis greater than 50 characters.");
+									alert.setContentText("The name you are trying to create\nis greater than 50 characters.");
 
 									alert.showAndWait();
 
@@ -328,7 +325,7 @@ public class PlaylistScreenController extends CustomController implements Import
 	}
 
 	private void updateNamesList() { 
-		
+
 		// We are displaying both the userRecordings names and the database names in the list view - we must find names in userRecordigs not in the database
 		ObservableList<Creation> databaseNames = FXCollections.observableArrayList(creations.getCreations());
 		ObservableList<Creation> userCreationNames = FXCollections.observableArrayList(userCreations.getCreations());
@@ -438,10 +435,10 @@ public class PlaylistScreenController extends CustomController implements Import
 	private void doNewCreation(String name) {
 		// ask the user if they would like to create the first non-existent name
 		Alert alert = new Alert(AlertType.CONFIRMATION);
-		
+
 		DialogPane dialogPane = alert.getDialogPane();
 		dialogPane.getStylesheets().add(getClass().getResource("dialog.css").toExternalForm());
-		
+
 		alert.setTitle("Name not found");
 		alert.setHeaderText("Name " + name + " was not found in the database or user database.");
 		alert.setContentText("Would you like to add it now?");
@@ -534,14 +531,11 @@ public class PlaylistScreenController extends CustomController implements Import
 
 		userCreations.saveState();
 	}
-	
-	
 
 	@Override
 	public void playlistFinished() {
 		playlist.getItems().clear();
 	}
-
 
 	private boolean isValidCompositeName(String name) {
 		if (name.length() == 0 || name.length() > 32) {

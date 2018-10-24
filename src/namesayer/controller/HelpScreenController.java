@@ -4,18 +4,21 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 
+/**
+ * Help screen that is currently unused and replaced by the manual PDF.
+ */
 public class HelpScreenController extends CustomController {
-	
+
 	@FXML
 	TextArea helpText;
-	
+
 	/**
 	 * A method which is called when the return to main screen button is clicked - returns the user to the main screen
 	 */
 	public void GoToMainScreen(ActionEvent event) {
 		mainListener.goMain();
 	}
-	
+
 	@Override
 	public void init() {
 		helpText.setText("\n" + 

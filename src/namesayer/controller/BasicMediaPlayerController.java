@@ -20,25 +20,30 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+/**
+ * This class is a controller for a media player module which consists of a play/pause button and some 
+ * text representing the currently playing file.
+ * It is used in multiple parts of the application.
+ */
 public class BasicMediaPlayerController implements Initializable {
 
 	@FXML
 	private Button playButton;
 	@FXML
 	private Label recordingName;
-	
+
 	private ImageView buttonImageView;
 	private Clip clip;
 	private File recording;
-	
+
 	private boolean isPlaying;
 	private boolean isDisabled;
-	
+
 	public void playClicked() {
 		if (clip == null || recording == null) {
 			return;
 		}
-		
+
 		setButtonState(!isPlaying);
 	}
 
@@ -47,29 +52,29 @@ public class BasicMediaPlayerController implements Initializable {
 		buttonImageView = new ImageView();
 		clip = null;
 		recording = null;
-		
+
 		playButton.setGraphic(buttonImageView);
 		recordingName.setText("");
-		
+
 		setButtonState(false);
 	}
-	
+
 	public void setRecording(File newRecording) {
 		recording = newRecording;
-		
+
 		if (recording == null) {
 			return;
 		}
-		
+
 		// stop any existing recording
 		setButtonState(false);
-		
+
 		recordingName.setText(recording.getName());
 
 		try {
 			clip = AudioSystem.getClip();
 			clip.open(AudioSystem.getAudioInputStream(recording));
-			
+
 			// reset the state of the clip and button when the end of the clip is finished
 			clip.addLineListener(new LineListener() {
 
@@ -81,7 +86,7 @@ public class BasicMediaPlayerController implements Initializable {
 						clip.setFramePosition(0);
 					}
 				}
-				
+
 			});
 		} catch (LineUnavailableException e) {
 			e.printStackTrace();
@@ -90,23 +95,23 @@ public class BasicMediaPlayerController implements Initializable {
 		} catch (UnsupportedAudioFileException e) {
 			e.printStackTrace();
 		}
-		
+
 		setButtonState(false);
 	}
-	
+
 	public void setDisabled(boolean isDisabled) {
 		this.isDisabled = isDisabled;
-		
+
 		playButton.setDisable(isDisabled);
-		
+
 		setButtonState(this.isPlaying);
 	}
-	
+
 	public void setButtonState(boolean playing) {
 		isPlaying = playing;
 
 		Image playImage;
-		
+
 		if (isPlaying) {
 			if (isDisabled) {
 				playImage = new Image("file:img" + File.separator + "pause_disabled.png");
@@ -120,17 +125,17 @@ public class BasicMediaPlayerController implements Initializable {
 				playImage = new Image("file:img" + File.separator + "play.png");
 			}
 		}
-		
+
 		buttonImageView.setImage(playImage);
-		
+
 		updatePlayerState();
 	}
-	
+
 	private void updatePlayerState() {
 		if (clip == null || recording == null) {
 			return;
 		}
-		
+
 		if (isPlaying) {
 			clip.start();
 		} else {

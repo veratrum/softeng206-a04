@@ -70,11 +70,14 @@ public class Utils {
 		byte[] encoded = Files.readAllBytes(file.toPath());
 		return new String(encoded, encoding);
 	}
-	
+
+	/**
+	 * Generates a string in the format YY-MM-DD-hh-mm
+	 */
 	public static String getDateFilenameFragment() {
 		LocalDateTime now = LocalDateTime.now();
-		
+
 		return now.getYear() + "-" + now.getMonthValue() + "-" + now.getDayOfMonth() + "-"
-				+ padLeft(now.getHour() + "", 2, "0") + padLeft(now.getMinute() + "", 2, "0");
+		+ padLeft(now.getHour() + "", 2, "0") + padLeft(now.getMinute() + "", 2, "0");
 	}
 }

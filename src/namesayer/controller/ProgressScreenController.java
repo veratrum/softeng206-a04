@@ -6,8 +6,6 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.chart.Axis;
-import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.ValueAxis;
 import javafx.scene.chart.XYChart;
@@ -17,14 +15,14 @@ public class ProgressScreenController extends CustomController {
 
 	@FXML
 	LineChart<Integer, Integer> progressGraph;
-	
+
 
 	private boolean progressIsUpdated = false;
-	
+
 	/**
 	 * A method which is called when the return to main screen button is clicked - returns the user to the main screen
 	 */
-	
+
 	@Override
 	public void init() {
 		ValueAxis<Integer> xAxis = (ValueAxis<Integer>) progressGraph.getXAxis();
@@ -34,13 +32,13 @@ public class ProgressScreenController extends CustomController {
 		xAxis.setLowerBound(0);
 		xAxis.setUpperBound(10);
 		xAxis.setTickLength(1);
-		
+
 		yAxis.setAutoRanging(false);
 		yAxis.setLowerBound(0);
 		yAxis.setUpperBound(10);
 		yAxis.setTickLength(1);
 	}
-	
+
 	@Override
 	public void load() {
 		updateProgress();
@@ -50,7 +48,7 @@ public class ProgressScreenController extends CustomController {
 		mainListener.goMain();
 		progressIsUpdated = false;
 		progressGraph.getData().clear();
-		
+
 	}
 
 	public void updateProgress() {

@@ -76,7 +76,7 @@ public class ProgressLoader {
 
 			Element rootElement = document.createElement("progress");
 			document.appendChild(rootElement);
-			
+
 			for (String rating: progress.getAllRatings()) {
 				Element ratingElement = document.createElement("rating");
 

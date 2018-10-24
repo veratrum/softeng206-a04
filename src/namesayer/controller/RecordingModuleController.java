@@ -29,12 +29,6 @@ import namesayer.RecordingListener;
 /**
  * Audio recording code adapted from:
  * https://www.java-tips.org/java-se-tips-100019/120-javax-sound/917-capturing-audio-with-java-sound-api.html
- *
- *
- * TODO: in final version
- * -- add a media player module on this screen after the user records a name
- * that is only enabled when a recording has been done and isn't currently in progress
- * -- add OK/Cancel buttons to supplement this
  */
 public class RecordingModuleController extends CustomController implements Initializable {
 
@@ -246,11 +240,11 @@ public class RecordingModuleController extends CustomController implements Initi
 	private File generateTempFilename(String name) {
 		File temp = new File(new File("temp"), name + ".wav");
 		int i = 2;
-		
+
 		while (temp.exists()) {
 			temp = new File(new File("temp"), name + " (" + i++ + ").wav");
 		}
-		
+
 		return temp;
 	}
 

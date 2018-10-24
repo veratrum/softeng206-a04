@@ -40,7 +40,7 @@ public class Main extends Application implements MainListener {
 	private MainScreenController mainController;
 	private RecordScreenController recordController;
 	private PracticeScreenController practiceController;
-	private HelpScreenController helpController;
+	//private HelpScreenController helpController;
 	private ImportScreenController importController;
 	private ProgressScreenController progressController;
 	private PlaylistScreenController playlistController;
@@ -169,7 +169,7 @@ public class Main extends Application implements MainListener {
 		result = loadScene("PracticeScreen.fxml", 800, 600);
 		practiceScene = result.scene;
 		practiceController = (PracticeScreenController) result.controller;
-		
+
 		result = loadScene("ImportScreen.fxml", 800, 600);
 		importScene = result.scene;
 		importController = (ImportScreenController) result.controller;
@@ -181,10 +181,13 @@ public class Main extends Application implements MainListener {
 		result = loadScene("PlaylistScreen.fxml", 800, 600);
 		playlistScene = result.scene;
 		playlistController = (PlaylistScreenController) result.controller;
-		
+
 		practiceController.addPlaylistListener(playlistController);
 	}
 
+	/**
+	 * Helper function that returns a Scene and CustomController. Reduces code reuse.
+	 */
 	private ScreenResult loadScene(String fxmlPath, int width, int height) {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("fxml" + File.separator + fxmlPath));
 		Pane root = null;
@@ -236,12 +239,13 @@ public class Main extends Application implements MainListener {
 
 	@Override
 	public void goHelp() {
+		// open a pdf using a pdf reader instead of an in-app help page
 		try {
 			Desktop.getDesktop().open(new File("Namesayer_User_Manual.pdf"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		/*selectedController.dispose();
 		stage.setScene(helpScene);
 		selectedController = helpController;

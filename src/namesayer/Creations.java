@@ -10,7 +10,7 @@ public class Creations {
 	private List<Creation> creations;
 	private CreationLoader creationLoader;
 	private DatabaseLocation location;
-	
+
 	public Creations(DatabaseLocation location, String directory, String xmlFile) {
 		creations = new ArrayList<Creation>();
 		this.location = location;
@@ -27,87 +27,87 @@ public class Creations {
 		loadData();
 		creationLoader.saveSeparateRatingsFile();
 	}
-	
+
 	private void loadData() {
 		creationLoader.loadMetadata();
 	}
-	
+
 	public void addCreation(Creation creation) {
 		this.creations.add(creation);
-		
+
 		sortCreations();
-		
+
 		creationLoader.saveMetadata();
 	}
-	
+
 	/**
 	 * This method should be called only by CreationLoader, instead of addCreation.
 	 * We don't want to overwrite metadata.xml with incomplete data while we are reading from it.
 	 */
 	public void addCreationWithoutSaving(Creation creation) {
 		this.creations.add(creation);
-		
+
 		sortCreations();
 	}
-	
+
 	public void deleteCreation(Creation creation) {
 		creations.remove(creation);
-		
+
 		sortCreations();
-		
+
 		creationLoader.saveMetadata();
 	}
-	
+
 	public void deleteAll() {
 		for (int i = 0; i < creations.size(); i++) {
 			Creation creation = creations.get(i);
-			
+
 			creation.delete();
 		}
-		
+
 		creations = new ArrayList<Creation>();
-		
+
 		creationLoader.saveMetadata();
 	}
-	
+
 	public void saveState() {
 		creationLoader.saveMetadata();
 	}
-	
+
 	public List<Creation> getCreations() {
 		return creations;
 	}
-	
+
 	public List<Recording> getAllRecordings() {
 		List<Recording> allRecordings = new ArrayList<Recording>();
-		
+
 		for (Creation creation: creations) {
 			allRecordings.addAll(creation.getRecordings());
 		}
-		
+
 		return allRecordings;
 	}
-	
+
 	public boolean creationExists(String name) {
 		for (Creation creation: creations) {
 			if (creation.getName().equals(name)) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	public Creation getCreationByName(String name) {
 		for (Creation creation: creations) {
 			if (creation.getName().equals(name)) {
 				return creation;
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	public boolean recordingExists(String filename) {
 		for (Creation creation: creations) {
 			for (Recording recording: creation.getRecordings()) {
@@ -116,46 +116,52 @@ public class Creations {
 				}
 			}
 		}
-		
+
 		return false;
 	}
-	
+
+	/**
+	 * Generates a new and necessarily unique recording filename for this creation in the format "Name (X).wav"
+	 */
 	public String generateRecordingFilename(String creationName) {
 		String filename = creationName + ".wav";
 		if (!recordingExists(filename)) {
 			return filename;
 		}
-		
+
 		int tries = 2;
 		String repeatName = creationName + " (" + tries + ").wav";
 		while (recordingExists(repeatName)) {
 			tries++;
 			repeatName = creationName + " (" + tries + ").wav";
 		}
-		
+
 		return repeatName;
 	}
-	
+
+	/**
+	 * Returns true if `name` is a valid sequence of characters for a name.
+	 */
 	public static boolean isValidName(String name) {
 		if (name.length() == 0 || name.length() > 32) {
 			return false;
 		}
-		
+
 		if (!Character.isLetter(name.charAt(0)) || !Character.isUpperCase(name.charAt(0))) {
 			return false;
 		}
-		
+
 		for (int i = 0; i < name.length(); i++) {
 			char character = name.charAt(i);
-			
+
 			if (!Character.isLetter(character) && !(character == '_')) {
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * Sorts all creations in alphabetical order.
 	 */

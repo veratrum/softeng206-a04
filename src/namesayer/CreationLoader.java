@@ -122,7 +122,7 @@ public class CreationLoader {
 				if (extensionFragments.length > 0 &&
 						extensionFragments[extensionFragments.length - 1].equals("wav")) {
 					trimModulateAudio(wav);
-					
+
 					// find the proper name of the recording, stripping out unnecessary parts
 					String[] nameFragments = extensionFragments[0].split("_");
 					String properName = nameFragments[nameFragments.length - 1];
@@ -249,18 +249,18 @@ public class CreationLoader {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * The first time the user loads the application, trim all audio files in the database and
 	 * modulate their volume.
 	 */
 	private void trimModulateAudio(File audioFile) {
 		String filename = audioFile.getAbsolutePath();
-		
+
 		ProcessBuilder ffmpeg = new ProcessBuilder("bash", "-c",
 				"ffmpeg -hide_banner -i " + filename + " -af silenceremove=1:0:-35dB:1:5:-35dB:0:peak "
-				+ filename);
-		
+						+ filename);
+
 		try {
 			Process process = ffmpeg.start();
 			process.waitFor();
@@ -269,6 +269,6 @@ public class CreationLoader {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 }

@@ -15,6 +15,12 @@ import namesayer.CreationListener;
 import namesayer.Creations;
 import namesayer.DatabaseLocation;
 
+/**
+ * This class controls a name creation module that is used in multiple places in the application.
+ * It enforces name requirements, and gives feedback to the user when they are not met.
+ * There is an option to create a new recording afterwards, which sends back a flag to the listener,
+ * allowing it to handle this.
+ */
 public class CreationModuleController extends CustomController implements Initializable {
 
 	@FXML
@@ -53,7 +59,10 @@ public class CreationModuleController extends CustomController implements Initia
 	public void setDatabaseLocation(DatabaseLocation databaseLocation) {
 		this.databaseLocation = databaseLocation;
 	}
-	
+
+	/**
+	 * The text that is in the name field to begin with.
+	 */
 	public void setDefaultText(String defaultText) {
 		nameField.setText(defaultText);
 	}

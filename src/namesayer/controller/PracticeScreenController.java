@@ -58,7 +58,7 @@ public class PracticeScreenController extends CustomController implements Record
 
 	private RecordingModuleController recordingController;
 	private File lastRecording;
-	
+
 
 	// We need some counter to know how far we are through the playlist
 	private int playlistPositionCounter  = 0;
@@ -81,13 +81,8 @@ public class PracticeScreenController extends CustomController implements Record
 		setPreviousAndNextButtonProperties();
 		previousButton.setDisable(true);
 		playAttempt.setDisable(true);
-		
+
 	}
-
-
-
-
-	
 
 	// ======================= Below are the event handlers to this controller class ====================================
 
@@ -128,7 +123,7 @@ public class PracticeScreenController extends CustomController implements Record
 			playlistListener.playlistFinished();
 			playlistData.clear();
 			mainListener.goMain();
-			
+
 		}
 		else {
 			setPreviousAndNextAndCurrentNames();
@@ -263,7 +258,7 @@ public class PracticeScreenController extends CustomController implements Record
 				} else {
 					// a non-existent creation slipped past the checks. not good
 				}
-				
+
 				clip1 = AudioSystem.getAudioInputStream(new File(selectedCreation.getRandomGoodRecording().getFile().toString()));
 				AudioSystem.write(clip1 ,AudioFileFormat.Type.WAVE, currentRecordingFile);
 
@@ -296,7 +291,7 @@ public class PracticeScreenController extends CustomController implements Record
 					} else {
 						// a non-existent creation slipped past the checks. not good
 					}
-					
+
 					secondRecording = secondCreation.getRandomGoodRecording();
 					clip2 = AudioSystem.getAudioInputStream(new File(secondRecording.getFile().toString()));
 
@@ -384,7 +379,7 @@ public class PracticeScreenController extends CustomController implements Record
 		else {
 			previousButton.setDisable(false);
 		}
-		
+
 		playAttempt.setDisable(true);
 	}
 
@@ -395,7 +390,11 @@ public class PracticeScreenController extends CustomController implements Record
 
 		// Now we need to ask the user how they think they did in their last attempt so we can track their progress.
 		List<String> choices = new ArrayList<>();
-		choices.add("1");choices.add("2");choices.add("3");choices.add("4");choices.add("5");choices.add("6");choices.add("7");choices.add("8");choices.add("9");choices.add("10");
+		
+		for (int i = 1; i <= 10; i++) {
+			choices.add(i + "");
+		}
+		
 		ChoiceDialog<String> dialog = new ChoiceDialog<>("1", choices);
 
 		DialogPane dialogPane = dialog.getDialogPane();
@@ -419,7 +418,7 @@ public class PracticeScreenController extends CustomController implements Record
 
 		playAttempt.setDisable(false);
 	}
-	
+
 	public void addPlaylistListener(PlaylistListener playlistListener) {
 		this.playlistListener= playlistListener;
 	}

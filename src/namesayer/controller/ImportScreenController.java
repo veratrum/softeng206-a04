@@ -107,7 +107,7 @@ public class ImportScreenController extends CustomController implements ImportLi
 
 	/**
 	 * Loads a packaged archive saved previously using saveDatabase.
-	 * Overwrites the existing data. (is this actually how it should work. idk)
+	 * Overwrites the existing data.
 	 * Adapted from https://stackoverflow.com/questions/40050270/java-unzip-and-progress-bar
 	 */
 	public void loadDatabase() {
@@ -233,9 +233,10 @@ public class ImportScreenController extends CustomController implements ImportLi
 
 	/**
 	 * Imports empty names from a text list e.g. class roll.
-	 * First/last names are indiscriminately added to the database.
+	 * First/last names are indiscriminately added to the USER database, not the standard database as
+	 * the above buttons modify.
 	 * They can be separated by commas, spaces, newlines, doesn't matter.
-	 * Overwrites the existing data. (is this actually how it should work. idk)
+	 * Overwrites the existing data.
 	 */
 	public void importDatabase() {
 		try {
