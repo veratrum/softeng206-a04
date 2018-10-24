@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -240,7 +241,13 @@ public class ImportScreenController extends CustomController implements ImportLi
 	 */
 	public void importDatabase() {
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxml/ImportEntryModule.fxml"));
+			File src = new File("src");
+			File namesayer = new File(src, "namesayer");
+			File fxml = new File(namesayer, "fxml");
+			File loaderPath = new File(fxml, "ImportEntryModule.fxml");
+			URL path = loaderPath.toURI().toURL();
+			FXMLLoader loader = new FXMLLoader(path);
+			//FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxml/ImportEntryModule.fxml"));
 			Pane importModulePane = loader.load();
 
 			Scene importScene = new Scene(importModulePane, 400, 300);

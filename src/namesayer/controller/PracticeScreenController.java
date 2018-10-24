@@ -92,7 +92,13 @@ public class PracticeScreenController extends CustomController implements Record
 
 	private void initMediaPlayer() {
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxml/MediaPlayerPaneBasic.fxml"));
+			File src = new File("src");
+			File namesayer = new File(src, "namesayer");
+			File fxml = new File(namesayer, "fxml");
+			File loaderPath = new File(fxml, "MediaPlayerPaneBasic.fxml");
+			URL path = loaderPath.toURI().toURL();
+			FXMLLoader loader = new FXMLLoader(path);
+			//FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/MediaPlayerPaneBasic.fxml"));
 			Pane mediaPlayerPane = loader.load();
 
 			mediaPlayerPane.setLayoutX(165);
@@ -102,7 +108,7 @@ public class PracticeScreenController extends CustomController implements Record
 
 			mediaPlayerController = loader.getController();
 		} catch (IOException e) {
-
+			e.printStackTrace();
 		}
 	}
 

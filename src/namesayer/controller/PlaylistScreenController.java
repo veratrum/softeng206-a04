@@ -242,7 +242,13 @@ public class PlaylistScreenController extends CustomController implements Import
 
 	public void importAPlaylist() {
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxml/ImportEntryModule.fxml"));
+			File src = new File("src");
+			File namesayer = new File(src, "namesayer");
+			File fxml = new File(namesayer, "fxml");
+			File loaderPath = new File(fxml, "ImportEntryModule.fxml");
+			URL path = loaderPath.toURI().toURL();
+			FXMLLoader loader = new FXMLLoader(path);
+			//FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxml/ImportEntryModule.fxml"));
 			Pane importModulePane = loader.load();
 
 			Scene importScene = new Scene(importModulePane, 400, 300);

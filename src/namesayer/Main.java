@@ -3,8 +3,6 @@ package namesayer;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -191,20 +189,7 @@ public class Main extends Application implements MainListener {
 	 * Helper function that returns a Scene and CustomController. Reduces code reuse.
 	 */
 	private ScreenResult loadScene(String fxmlPath, int width, int height) {
-		File src = new File("src");
-		File namesayer = new File(src, "namesayer");
-		File fxml = new File(namesayer, "fxml");
-		File loaderPath = new File(fxml, fxmlPath);
-		URL path = null;
-		
-		try {
-			path = loaderPath.toURI().toURL();
-		} catch (MalformedURLException e1) {
-			e1.printStackTrace();
-		}
-		
-		FXMLLoader loader = new FXMLLoader(path);
-		//FXMLLoader loader = new FXMLLoader(getClass().getResource("fxml" + File.separator + fxmlPath));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("fxml/" + fxmlPath));
 		Pane root = null;
 
 		try {
