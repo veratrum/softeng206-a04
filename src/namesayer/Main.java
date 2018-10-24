@@ -3,6 +3,7 @@ package namesayer;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -13,7 +14,6 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import namesayer.controller.CustomController;
-import namesayer.controller.HelpScreenController;
 import namesayer.controller.ImportScreenController;
 import namesayer.controller.MainScreenController;
 import namesayer.controller.PlaylistScreenController;
