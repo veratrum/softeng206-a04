@@ -241,9 +241,14 @@ public class Main extends Application implements MainListener {
 	public void goHelp() {
 		// open a pdf using a pdf reader instead of an in-app help page
 		try {
-			Desktop.getDesktop().open(new File("Namesayer_User_Manual.pdf"));
+			String cwd = System.getProperty("user.dir");
+			System.out.println(cwd);
+			ProcessBuilder pb = new ProcessBuilder("firefox", cwd + "/Namesayer_User_Manual.pdf" );
+			pb.start();
+
 		} catch (IOException e) {
 			e.printStackTrace();
+			
 		}
 
 		/*selectedController.dispose();
